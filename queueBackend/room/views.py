@@ -7,4 +7,4 @@ from django.shortcuts import render
 # Create your views here.
 
 def index(request):
-    return HttpResponse("hello, world. You're at the room index.")
+    return HttpResponse("Hello, world. You're at the room index.")
