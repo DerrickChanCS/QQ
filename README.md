@@ -7,7 +7,7 @@
    - `pip install --user virtaulenv`
    - `pip install --user virtualenvwrapper`
    - `PATH="$PATH:/usr/bin/"`
-   - `source ``which virtualenvwrapper.sh\``
+   - ``source `which virtualenvwrapper.sh```
    - `mkvirtualenv 174Django`
 4. Swap to the virtualenv `workon 174Django`
 5. Install django `pip install django`
