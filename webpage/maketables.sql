@@ -1,5 +1,6 @@
 CREATE TABLE Rooms(
     code char(5) PRIMARY KEY,
+    open number(1,0)
 );
 
 CREATE TABLE Tags(
