@@ -10,6 +10,7 @@ CREATE TABLE Tags(
     	REFERENCES Rooms(code)
     	ON DELETE CASCADE
 );
+/* Tags table ^^^ should have (room,tagname) as a Primary Key */
 
 CREATE TABLE Questions(
     room char(5),
