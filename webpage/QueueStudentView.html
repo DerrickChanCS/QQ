@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+</head>
+<body>
+    <div class="w3-container w3-centered w3-row">
+        <h2 class="w3-center">Room ####</h2>
+    </div>
+    <div class="w3-row" style="margin-left: 15%">
+        <input class="w3-input w3-border w3-half" style="width: 40%" />
+        <button class="w3-button w3-round" style="margin-left: 5%">Enter Station #</button>
+    </div>
+    <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
+        <textarea name="Text1" class="w3-input w3-border w3-half" rows="5" style="width: 54%"></textarea>
+        <button class="w3-button w3-border" style="margin-left: 1%; margin-top: 30px">Submit</button>
+
+    </div>
+    <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
+        <label>Tags:</label>
+    </div>
+    <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
+        <input class="w3-check" type="checkbox" style="margin-right: 1%" /><label>Test</label>
+        <!-- echo this out depending on the number of tags that get created, might have to limit based on character length and number of tags -->
+    </div>
+
+
+    <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
+        <div class="w3-panel w3-grey w3-display-container w3-dropdown-click" style="height: 100px; width: 70%">
+            <div onclick="expandQuestion('Q1')" class="w3-display-left w3-dark-grey w3-center" style="width: 50%; height: 100px">
+                <p>Test Station</p>
+            </div>
+            <div class="w3-display-right w3-grey w3-center" style="width: 50%">
+                <p>Test Tag</p>
+                <p>Timestamp</p>
+            </div>
+            <span onclick="this.parentElement.style.display='none'"
+                class="w3-button w3-border w3-dark-grey w3-large w3-display-topright" style="height: 51px">&times;</span>
+        </div>
+        <textarea id="Q1" class="w3-border w3-hide w3-container" rows="4" readonly="" style="height:100px; width:59.5%; margin-bottom:20px">SampleText question content 
+        </textarea>
+    </div>
+
+
+
+    <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
+        <div class="w3-panel w3-grey w3-display-container w3-dropdown-click" style="height: 100px; width: 70%">
+            <div onclick="expandQuestion('Q2')" class="w3-display-left w3-dark-grey w3-center" style="width: 50%; height: 100px">
+                <p>Test Station</p>
+            </div>
+            <div class="w3-display-right w3-grey w3-center" style="width: 50%">
+                <p>Test Tag</p>
+                <p>Timestamp</p>
+            </div>
+            <span onclick="this.parentElement.style.display='none'"
+                class="w3-button w3-border w3-dark-grey w3-large w3-display-topright" style="height: 51px">&times;</span>
+        </div>
+        <textarea id="Q2" class="w3-border w3-hide w3-container" rows="4" readonly="" style="height:100px; width:59.5%; margin-bottom:20px">SampleText question content Number 2
+        </textarea>
+    </div>
+
+
+
+  <script>
+      function expandQuestion(id) {
+          var x = document.getElementById(id);
+          if (x.className.indexOf("w3-show") == -1) {
+              x.className += " w3-show";
+          } else {
+              x.className = x.className.replace(" w3-show", "");
+          }
+      }
+</script>
+</body>
+</html>
