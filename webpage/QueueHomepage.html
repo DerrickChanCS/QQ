@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <script
+src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 </head>
 <body>
     <div class="w3-container" style="width: 100%">
@@ -17,17 +19,41 @@
                     <div class="">
                         <input class="w3-input w3-border" id="Text1" type="text" style="width: 30%; margin-left:35%" />
                         <p></p>
-                        <button class="w3-button w3-round">Enter Room</button>
+                        <button onclick="enterRoom()" class="w3-button w3-round">Enter Room</button>
                     </div>
                     <p></p>
 
                 </div>
 
+    <script>
+        function enterRoom(){
+            var roomCode = $("#Text1").val();
+            sessionStorage.roomCode = roomCode;
+            console.log(roomCode);
+            $.ajax({
+                    type:"POST",
+                    url:"./Validate.php",
+                    data:"roomCode=" + sessionStorage.roomCode,
+                    success:function(data){
+                        console.log(data);
+                        //var objData  = jQuery.parseJSON(data);
+                        console.log("Hello There General Kenobi");
+                        if (data["isExists"] == "false"){
+                                alert("Room Does Not Exist");
+                            }else{
+                                window.location.href = "QueueStudentView.html";
+                            }
+                    }
 
+                    });
+            
+        }
+    </script>
 
 
                 <p>
-                    <button class="w3-button w3-round">Create New Room</button>
+                <a href="QueueTARoomSetUpPage.php"><button class="w3-button
+                        w3-round">Create New Room</button></a>
                 </p>
                 <p>
                     &nbsp;
