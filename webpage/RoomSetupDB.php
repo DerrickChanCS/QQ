@@ -1,6 +1,7 @@
 <?php
-	$conn = oci_connect( 'gyabutiv',
-                         '(password)',
+    include 'password.php';
+	$conn = oci_connect( $username,
+                         $password,
                          '//dbserver.engr.scu.edu/db11g');
     if ($conn) { //print "Connected";
                 }

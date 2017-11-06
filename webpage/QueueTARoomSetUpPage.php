@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
     <script type="text/javascript">
+     
       $(document).ready(function(){
         // When this particular form is submitted
         $('#send_tag').submit(function(e){
@@ -44,8 +45,9 @@
 <!-- PHP CODE for randomizing room code. Code will send the value to the database
     , and use the value for display purposes on this page-->
 <?php
-    $conn = oci_connect( 'gyabutiv',
-                         '(password)',
+    include 'password.php'
+    $conn = oci_connect( $username,
+                         $password,
                          '//dbserver.engr.scu.edu/db11g');
     if ($conn) { print "Connected";}
     else { print "Connection failed <br />"; exit;}
@@ -76,7 +78,7 @@
 
 <body>
     <div class="w3-container w3-centered">
-        <h2 class="w3-center">Room <?php echo $str; ?> </h2>
+    <h2 class="w3-center w3-half">Room </h2> <h2 class="w3-half" id="roomCode"> <?php echo $str; ?></h2>
         <p class="w3-center">This is the code the students will need to enter in order to access the room</p>
         <div class="w3-row" style="margin-left: 27%; margin-right: 15%">
             <div class="w3-row" style="margin-bottom: 30px">
@@ -104,8 +106,15 @@
 
         </div>
         <div class="w3-row w3-center" style="margin-top:150px">
-            <button class="w3-button">Launch Room</button>
+          <button onclick="nextpage()" class="w3-button">Launch Room</button>
         </div>
     </div>
+    <script> 
+    function nextpage(){
+          sessionStorage.roomCode = "<?php echo $str; ?>"; 
+          console.log("TA ROOM STUFF" + sessionStorage.roomCode);
+          window.location.href = "QueueStudentView.html";
+}
+</script>
 </body>
 </html>

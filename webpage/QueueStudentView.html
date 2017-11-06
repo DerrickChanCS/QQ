@@ -9,15 +9,15 @@
 </head>
 <body>
     <div class="w3-container w3-centered w3-row">
-        <h2 class="w3-center">Room ####</h2>
+        <h2 id = "RoomNum" class="w3-center"></h2>
     </div>
     <div class="w3-row" style="margin-left: 15%">
-        <input class="w3-input w3-border w3-half" style="width: 40%" />
+        <input id="userName" class="w3-input w3-border w3-half" style="width: 40%" />
         <button class="w3-button w3-round" style="margin-left: 5%">Enter Station #</button>
     </div>
     <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
         <textarea id="Text1" class="w3-input w3-border w3-half" rows="5" style="width: 54%"></textarea>
-        <button onclick="testQuestionCreate()" class="w3-button w3-border" style="margin-left: 1%; margin-top: 30px">Submit</button> <!-- will need to update function to pass in params from the text box and their station num and any tags used, tag functionality may have to wait-->
+        <button onclick="submitQuestion()" class="w3-button w3-border" style="margin-left: 1%; margin-top: 30px">Submit</button> <!-- will need to update function to pass in params from the text box and their station num and any tags used, tag functionality may have to wait-->
 
     </div>
     <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
@@ -27,9 +27,41 @@
         <input class="w3-check" type="checkbox" style="margin-right: 1%" /><label>Test</label>
         <!-- echo this out depending on the number of tags that get created, might have to limit based on character length and number of tags -->
     </div>
-
+    <div id="devBtn" class="w3-row">
+        <button onclick="showQuestions()" class="w3-button
+            w3-border">DevButton
+        </button>
+    </div>
 
     <script>
+        document.getElementById("RoomNum").innerHTML = "Room " +
+        sessionStorage.roomCode;
+        function showQuestions(){
+            
+            $.ajax({
+                    type:"POST",
+                    url:"./GetRoom.php",
+                    data: "roomCode=" + sessionStorage.roomCode,
+                    success:function(data){
+                        console.log(sessionStorage.roomCode);
+                        $("#test1").html(data);
+                        }
+                    });
+        }
+        function submitQuestion(){
+            $.ajax({
+                    type:"POST",
+                    url:"./SubmitQuestion.php", 
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026questionText=" + $("#Text1").val() +
+                    "\u0026userName=" + $("#userName").val(),
+                        success:function(data){
+                            console.log(sessionStorage.roomCode);
+                            console.log($("#Text1").val()); 
+                            console.log(data.status);
+                        }
+                    });
+        }
         var currentDiv = document.getElementById("test1"); //keeps track of the current div
         var qNum = 0; //global var to give new questions a div with a unique id
         function testQuestionCreate() {
