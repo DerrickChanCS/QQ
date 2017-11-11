@@ -1,12 +1,17 @@
 <?php
     header('Content-Type: application/json');
-    $response = array("isExists" => "true");
+    //initialize response array
+    //Desired outcome: roomExists is true and usernameExists is false
+    $response = array("roomExists" => "true", "usernameExists" => "false");
+
+    //Standard database connection info
     include 'password.php';
 	$conn = oci_connect($username,
 			$password,
 			'//dbserver.engr.scu.edu/db11g');
     if ($conn) {}
     $roomCode = $_POST['roomCode'];
+    $checkUser = $_POST['username'];
     //echo $roomCode;
 
     //$sql = "Select * from Rooms";
@@ -19,9 +24,24 @@
     //echo $num_rows;
     //var_dump($res);
     if ($num_rows == 0){
-        $response["isExists"] = "false";
+        $response["roomExists"] = "false";
     } else {
-        $response["isExists"] = "true";
+        $response["roomExists"] = "true";
+    }
+    
+    $sql = "Select * from Users where code = :roomCode and username = :checkUser";
+    $compiled = oci_parse($conn, $sql);
+    oci_bind_by_name($compiled, ":roomCode", $roomCode);
+    oci_bind_by_name($compiled, ":checkUser", $checkUser);
+    oci_execute($compiled);
+
+    $num_rows = oci_fetch_all($compiled,$res);
+    //echo $num_rows;
+    //var_dump($res);
+    if ($num_rows == 0){
+        $response["usernameExists"] = "false";
+    } else {
+        $response["roomExists"] = "true";
     }
     
     echo json_encode($response);

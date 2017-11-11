@@ -3,6 +3,14 @@ CREATE TABLE Rooms(
     open number(1,0)
 );
 
+CREATE TABLE Users(
+    room varchar(4),
+    username varchar(40),
+    FOREIGN KEY (room)
+        REFRENCES Rooms(code)
+        ON DELETE CASCADE
+);
+
 CREATE TABLE Tags(
     room varchar(4),
     tagname varchar(20),

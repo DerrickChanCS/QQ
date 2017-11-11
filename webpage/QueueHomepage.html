@@ -29,20 +29,30 @@ src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         function enterRoom(){
             var roomCode = $("#Text1").val();
             sessionStorage.roomCode = roomCode;
+            //put new textbox for user name
+            //textbox id should be UsernameText
+            //sessionStorage.username = $("#UsernameText").val();
+            sessionStorage.username = "testuser";
             console.log(roomCode);
             $.ajax({
                     type:"POST",
                     url:"./Validate.php",
-                    data:"roomCode=" + sessionStorage.roomCode,
+                    data:"roomCode=" + sessionStorage.roomCode
+                    + "\u0026username=" + sessionStorage.username,
                     success:function(data){
                         console.log(data);
                         //var objData  = jQuery.parseJSON(data);
                         console.log("Hello There General Kenobi");
-                        if (data["isExists"] == "false"){
-                                alert("Room Does Not Exist");
-                            }else{
+                        console.log("usernameExists: " +data["usernameExists"]);
+                        if (data["roomExists"] == "false"){
+                            alert("Room Does Not Exist");
+                        }else{
+                            if (data["usernameExists"] == "true"){
+                                alert("Username already exists. Try another");
+                            } else{
                                 window.location.href = "QueueStudentView.html";
                             }
+                        }
                     }
 
                     });
