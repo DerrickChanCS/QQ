@@ -7,7 +7,7 @@ CREATE TABLE Users(
     room varchar(4),
     username varchar(40),
     FOREIGN KEY (room)
-        REFRENCES Rooms(code)
+        REFERENCES Rooms(code)
         ON DELETE CASCADE
 );
 
