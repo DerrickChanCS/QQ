@@ -45,7 +45,7 @@
 <!-- PHP CODE for randomizing room code. Code will send the value to the database
     , and use the value for display purposes on this page-->
 <?php
-    include 'password.php'
+    include 'password.php';
     $conn = oci_connect( $username,
                          $password,
                          '//dbserver.engr.scu.edu/db11g');
