@@ -6,9 +6,9 @@ $conn = oci_connect($username,
 if ($conn) {}
 $roomCode = $_POST['roomCode'];
 //echo $roomCode;
-$sql = "Select * from Questions where room='${roomCode}'";
+$sql = "Select * from Questions where room = :roomCode";
 $compiled = oci_parse($conn, $sql);
-//oci_bind_by_name($compiled, ':roomCode', $roomCode);
+oci_bind_by_name($compiled, ":roomCode", $roomCode);
 oci_execute($compiled);
 $num_columns = OCINumCols($compiled);
 //echo "<TABLE BORDER=1>";
