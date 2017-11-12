@@ -56,22 +56,25 @@
                      "G","H","I","J","K","L","M","N",
                      "O","P","Q","R","S","T","U","V",
                      "W","X","Y","Z");
-
+    $badwords = array("FUCK","FUKC","CUNT",
+                      "DICK","SHIT","DAMN","CRAP","KRAP","BDSM");
     session_start();
 
+    do {
     $rand_keys = array_rand($letters, 4);
     $str = $letters[$rand_keys[0]] . $letters[$rand_keys[1]]
            . $letters[$rand_keys[2]] 
            . $letters[$rand_keys[3]];
-
+    }while(in_array($str,$badwords));
     echo $str;
+
     $_SESSION['room_code'] = $str;
 
-    $sql = "INSERT INTO ROOMS VALUES ('$str', 0)";
-    $sql_statement = OCIParse($conn, $sql);
-    OCIexecute($sql_statement);
-    OCIFreeStatement($sql_statement);
-    OCILogoff($conn);
+    //$sql = "INSERT INTO ROOMS VALUES ('$str', 0)";
+    //$sql_statement = OCIParse($conn, $sql);
+    //OCIexecute($sql_statement);
+    //OCIFreeStatement($sql_statement);
+    //OCILogoff($conn);
 ?>
 
 
@@ -111,9 +114,22 @@
     </div>
     <script> 
     function nextpage(){
-          sessionStorage.roomCode = "<?php echo $str; ?>"; 
-          console.log("TA ROOM STUFF" + sessionStorage.roomCode);
-          window.location.href = "QueueStudentView.html";
+          $RoomCode = "<?php echo $str; ?>";
+          //window.alert($RoomCode);
+          $.ajax({
+              url:'ConfirmRoom.php',
+              data: { RoomCode : $RoomCode},
+              type: "POST",
+              success: function(a){
+                  //alert('Hello from PHP: ' + a);
+                  sessionStorage.roomCode = "<?php echo $str; ?>"; 
+                  console.log("TA ROOM STUFF" + sessionStorage.roomCode);
+                  window.location.href = "QueueStudentView.html";
+              },
+              error: function(data){
+                  console.log(data);
+              }
+         });
 }
 </script>
 </body>
