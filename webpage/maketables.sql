@@ -29,6 +29,7 @@ CREATE TABLE Questions(
     question_text varchar(200),
     time_stamp varchar(30),
     username varchar(40),
+    isResolved char(1),
     FOREIGN KEY (room) 
         REFERENCES Rooms(code) 
         ON DELETE CASCADE
