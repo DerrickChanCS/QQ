@@ -31,8 +31,8 @@ src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
             sessionStorage.roomCode = roomCode;
             //put new textbox for user name
             //textbox id should be UsernameText
-            //sessionStorage.username = $("#UsernameText").val();
-            sessionStorage.username = "testuser";
+            sessionStorage.username = $("#UsernameText").val();
+            //sessionStorage.username = "testuser";
             console.log(roomCode);
             $.ajax({
                     type:"POST",
@@ -43,11 +43,11 @@ src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
                         console.log(data);
                         //var objData  = jQuery.parseJSON(data);
                         console.log("Hello There General Kenobi");
-                        console.log("usernameExists: " +data["usernameExists"]);
                         if (data["roomExists"] == "false"){
                             alert("Room Does Not Exist");
                         }else{
                             if (data["usernameExists"] == "true"){
+                                console
                                 alert("Username already exists. Try another");
                             } else{
                                 window.location.href = "QueueStudentView.html";
@@ -76,6 +76,9 @@ src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
         </div>
 
+    </div>
+    <div>
+        <input class="w3-input w3-border" id="UsernameText" type="text" style="width: 30%; margin-left:35%" />
     </div>
 
 </body>

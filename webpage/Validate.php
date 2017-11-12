@@ -29,7 +29,7 @@
         $response["roomExists"] = "true";
     }
     
-    $sql = "Select * from Users where code = :roomCode and username = :checkUser";
+    $sql = "Select * from Users where (room = :roomCode and username = :checkUser)";
     $compiled = oci_parse($conn, $sql);
     oci_bind_by_name($compiled, ":roomCode", $roomCode);
     oci_bind_by_name($compiled, ":checkUser", $checkUser);
@@ -40,8 +40,13 @@
     //var_dump($res);
     if ($num_rows == 0){
         $response["usernameExists"] = "false";
+        $sql = "Insert into Users Values( :roomCode , :checkUser)";
+        $compiled = oci_parse($conn, $sql);
+        oci_bind_by_name($compiled, ":roomCode" , $roomCode);
+        oci_bind_by_name($compiled, ":checkUser" , $checkUser);
+        oci_execute($compiled);
     } else {
-        $response["roomExists"] = "true";
+        $response["usernameExists"] = "true";
     }
     
     echo json_encode($response);
