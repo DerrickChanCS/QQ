@@ -38,7 +38,7 @@
     $num_rows = oci_fetch_all($compiled,$res);
     //echo $num_rows;
     //var_dump($res);
-    if ($num_rows == 0){
+    if ($num_rows == 0 && $response["roomExists"] == "true"){
         $response["usernameExists"] = "false";
         $sql = "Insert into Users Values( :roomCode , :checkUser)";
         $compiled = oci_parse($conn, $sql);
