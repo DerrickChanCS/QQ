@@ -124,7 +124,7 @@
                   //alert('Hello from PHP: ' + a);
                   sessionStorage.roomCode = "<?php echo $str; ?>"; 
                   console.log("TA ROOM STUFF" + sessionStorage.roomCode);
-                  window.location.href = "QueueStudentView.html";
+                  window.location.href = "QueueTAView.html";
               },
               error: function(data){
                   console.log(data);
