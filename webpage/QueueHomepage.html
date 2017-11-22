@@ -32,6 +32,10 @@ src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
             //put new textbox for user name
             //textbox id should be UsernameText
             sessionStorage.username = $("#UsernameText").val();
+            if(sessionStorage.username.length == 0){
+                alert("Please enter a username.");
+                return;
+            }
             //sessionStorage.username = "testuser";
             console.log(roomCode);
             $.ajax({
