@@ -70,7 +70,7 @@
                     url:"./SubmitQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026questionText=" + $("#Text1").val() +
-                    "\u0026userName=" + $("#userName").val(),
+                    "\u0026userName=" + sessionStorage.username,
                         success:function(data){
                             console.log(sessionStorage.roomCode);
                             console.log($("#Text1").val()); 
