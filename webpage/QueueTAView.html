@@ -117,9 +117,19 @@
                 x.className = x.className.replace(" w3-show", "");
             }
             document.getElementById(id).style.display = "none";
+            console.log("In close question: " +id);
             //Ajax post to remove sessionName from DB
-            
+            $.ajax({
+                    type:"POST",
+                    url:"./RemoveQuestion.php", 
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026username=" + id,
+                    success:function(data){
+                        console.log("done with removeQuestion.php");
+                        }
+                    });
         }
+
     </script>
 </body>
 </html>

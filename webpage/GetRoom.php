@@ -205,16 +205,6 @@ for(var i = 0; i< userNames.length; i++){
     container.appendChild(newDiv);
 
 }
-/*
-var textAreaArray = $("#container").find("textarea");
-
-console.log(textAreaArray);
-for(var x = 0; x < textAreaArray.length; x++){
-    console.log($("#" + textAreaArray[x].id).hasClass("w3-hide"));
-}
-console.log("test");
-
- */
 </script>
 
 
