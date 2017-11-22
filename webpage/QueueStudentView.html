@@ -11,9 +11,8 @@
     <div class="w3-container w3-centered w3-row">
         <h2 id = "RoomNum" class="w3-center"></h2>
     </div>
-    <div class="w3-row" style="margin-left: 15%">
-        <input id="userName" class="w3-input w3-border w3-half" style="width: 40%" />
-        <button class="w3-button w3-round" style="margin-left: 5%">Enter Station #</button>
+    <div class="w3-row w3-centered">
+        <h3 id = "UserID" class="w3-center"></h3> 
     </div>
     <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
         <textarea id="Text1" class="w3-input w3-border w3-half" rows="5" style="width: 54%"></textarea>
@@ -36,6 +35,8 @@
     <script>
         document.getElementById("RoomNum").innerHTML = "Room " +
         sessionStorage.roomCode;
+        document.getElementById("UserID").innerHTML = "User Name : " +
+        sessionStorage.username;
         var currentDivNum = 0;
         setInterval(showQuestions, 3000);
         function showQuestions(){
