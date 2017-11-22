@@ -54,7 +54,7 @@
 
             $.ajax({
                     type:"POST",
-                    url:"./GetRoom.php",
+                    url:"./GetStudentRoom.php",
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026currentDivNum=" + currentDivNum +
                     "\u0026textOpenClose=" + textString,
@@ -67,14 +67,26 @@
         function submitQuestion(){
             $.ajax({
                     type:"POST",
-                    url:"./SubmitQuestion.php", 
+                    url:"./CheckUserQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
-                    "\u0026questionText=" + $("#Text1").val() +
-                    "\u0026userName=" + sessionStorage.username,
+                    "\u0026username=" + sessionStorage.username,
                         success:function(data){
-                            console.log(sessionStorage.roomCode);
-                            console.log($("#Text1").val()); 
-                            console.log(data.status);
+                            if(data["questionExists"] == "true"){
+                                alert("You already submitted a question! Delete your previous question or wait until your current question is answered.");
+                            }else{
+                                $.ajax({
+                                        type:"POST",
+                                        url:"./SubmitQuestion.php", 
+                                        data: "roomCode=" + sessionStorage.roomCode +
+                                        "\u0026questionText=" + $("#Text1").val() +
+                                        "\u0026userName=" + sessionStorage.username,
+                                            success:function(data){
+                                                console.log(sessionStorage.roomCode);
+                                                console.log($("#Text1").val()); 
+                                                console.log(data.status);
+                                            }
+                                        });
+                            }
                         }
                     });
         }
@@ -115,6 +127,9 @@
     </script>
     <script>
         function closeQuestion(id) {
+            if(sessionStorage.username != id){
+               return;
+            }
             
             var x = document.getElementById(id);
             if (x.className.indexOf("w3-show") == -1) {
@@ -124,6 +139,15 @@
             }
             document.getElementById(id).style.display = "none";
             //Ajax post to remove sessionName from DB
+            $.ajax({
+                    type:"POST",
+                    url:"./RemoveQuestion.php",
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026username=" + id,
+                    success:function(data){
+                            console.log("done with removeQuestion.php");
+                        }
+                    });
             
         }
     </script>
