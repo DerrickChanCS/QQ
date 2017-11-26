@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</head>
+<body>
+    <div class="w3-container w3-centered w3-row">
+        <h2 id = "RoomNum" class="w3-center"></h2>
+    </div>
+    <div class="w3-container w3-centered w3-row">
+        <h2 id ="displayText" class="w3-center"></h2>
+    </div>
+     <div class="w3-container w3-centered w3-row">
+        <h2 id = "whichUser" class="w3-center"></h2>
+    </div>
+    <div class="w3-container w3-centered w3-row"
+        style="margin-left: 14%">
+        <textarea id = editText style="height:100px; width: 70.5%; margin-bottom:20px"></textarea>
+        <button onclick ="answerQuestion()" class="w3-button w3-border"
+            style="margin-bottom:130px">
+            Submit Answer</button>
+    </div>
+    <div id="devBtn" class="w3-row">
+        <button onclick="showQuestions()" class="w3-button w3-hide
+            w3-border">DevButton
+        </button>
+    </div>
+
+    <script>
+        document.getElementById("RoomNum").innerHTML = "Room " +
+        sessionStorage.roomCode;
+        var currentDivNum = 0;
+        console.log("current div num from TAVIEW: " +currentDivNum);
+        setInterval(showQuestions, 3000);
+       
+        function showQuestions(){
+            console.log("HERE");
+
+            var textAreaArray = $("#container").find("textarea");
+            console.log(textAreaArray);
+            var textString = "";
+            var tf = "";
+            for(var x = 0; x < textAreaArray.length; x++){
+                tf = $("#" + textAreaArray[x].id).hasClass("w3-show");
+                textString = textString.concat(textAreaArray[x].id, ",", tf, "%");
+            }
+            textString = textString.substring(0, textString.length -1);
+
+            console.log(textString);
+
+
+
+            $.ajax({
+                    type:"POST",
+                    url:"./GetRoom.php", 
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026currentDivNum=" + currentDivNum +
+                    "\u0026textOpenClose=" + textString,
+                    success:function(data){
+                        console.log(sessionStorage.roomCode);
+                        $("#test1").html(data);
+                        }
+                    });
+        }
+       
+        function answerQuestion(){
+
+            $.ajax({
+                    type:"POST",
+                    url:"./updateQuestion.php", 
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026questionText=" + $("#editText").val() +
+                    "\u0026userName=" + $("#whichUser").text(),
+                        success:function(data){
+                            console.log(sessionStorage.roomCode);
+                           // console.log($("#Text1").val()); 
+                            console.log(data.status);
+                        }
+                    });
+        }
+        
+        var currentDiv = document.getElementById("test1"); //keeps track of the current div
+        var qNum = 0; //global var to give new questions a div with a unique id
+        function testQuestionCreate() {
+            var questionTextContent = document.getElementById("Text1").value;
+            
+            qNum++; //incriments the question div number
+            var newDiv = document.createElement("div");
+            document.body.insertBefore(newDiv, currentDiv); //create and insert a new div with a unique id above the previous question div
+            newDiv.id = qNum;
+            currentDiv = newDiv;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById(newDiv.id).innerHTML =
+                        this.responseText;
+                }
+            };
+            xhttp.open("GET", "test.php?q=" + qNum + "&t=" + questionTextContent, true); //passes the qnum to get added to the php file. Allows each question panel to have elements with unique ids so they can call the expand/close question functions without conflicting with eachother
+            xhttp.send();
+        }
+    </script>
+    <div id="questions">
+        <div id="test1"></div>
+    </div>
+
+    <script>
+        function expandQuestion(id) {
+            var x = document.getElementById(id);
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+
+        }
+        function populateText(id){
+            var x = document.getElementById(id);
+            var y = document.getElementById("editText");
+
+            $("#whichUser").text(id);
+            $("#displayText").text("Answering the following user's question: ");  
+            console.log($("#"+id).val());
+            $("#editText").val($("#"+id).val() + "\nAnswer: ");
+            y.focus();
+             
+        }
+    </script>
+
+    <script>
+        function closeQuestion(id) {
+            
+            var x = document.getElementById(id);
+            if (x.className.indexOf("w3-show") == -1) {
+
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+            document.getElementById(id).style.display = "none";
+            console.log("In close question: " +id);
+            //Ajax post to remove sessionName from DB
+            $.ajax({
+                    type:"POST",
+                    url:"./RemoveQuestion.php", 
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026username=" + id,
+                    success:function(data){
+                        console.log("done with removeQuestion.php");
+                        }
+                    });
+        }
+
+    </script>
+</body>
+</html>
+
+
