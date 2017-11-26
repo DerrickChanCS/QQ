@@ -179,31 +179,47 @@ for(var i = 0; i< userNames.length; i++){
     if(sessionStorage.username == userNames[i])
         newDivChild1.appendChild(closeSpan);
 
-    //Text area
+    //Text area ---------------------------
     var insertText = document.createElement('textarea');
     insertText.setAttribute("id", userNames[i]);
     insertText.setAttribute("onclick", 'populateText(' + '\"' + userNames[i] + '\"' + ')');
 
     console.log(divDict[userNames[i]]);
     if (divDict[userNames[i]] == "true"){
-    insertText.setAttribute("class", "w3-border w3-show w3-hide w3-container");
+    insertText.setAttribute("class", "w3-border w3-col w3-show w3-hide w3-container w3-half");
     }
     else{
 
-    insertText.setAttribute("class", "w3-border w3-hide w3-container");
+    insertText.setAttribute("class", "w3-border w3-half w3-hide w3-container");
     }
     insertText.setAttribute("rows", "4");
     insertText.setAttribute("readonly", "");
     insertText.setAttribute("style","height: 100px; width: 59.5%; margin-bottom: 20px");
 
+    //Box text
     var boxText = document.createTextNode(questionText[i]);
     insertText.appendChild(boxText);
 
+    //Row for button and textbox
+    var textButtonRow = document.createElement('div');
+    textButtonRow.setAttribute("class", "w3-row");
+
+
+    //Update Button
+    var updateButton = document.createElement('button');
+    updateButton.setAttribute("class", "w3-button w3-hide w3-border");
+    updateButton.setAttribute("style", "margin-left: 5px; margin-top: 30px");
+    updateButton.setAttribute("id","B" + userNames[i]);
+    updateButton.innerHTML = "Update";
+
+
+    textButtonRow.appendChild(insertText);
+    textButtonRow.appendChild(updateButton);
 
 
     //Append Child 1 to newDiv
     newDiv.appendChild(newDivChild1);
-    newDiv.appendChild(insertText);
+    newDiv.appendChild(textButtonRow);
 
     //Append newDiv to container
     container.appendChild(newDiv);

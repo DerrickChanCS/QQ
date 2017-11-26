@@ -34,7 +34,7 @@
         document.getElementById("UserID").innerHTML = "User Name : " +
         sessionStorage.username;
         var currentDivNum = 0;
-        setInterval(showQuestions, 3000);
+        //setInterval(showQuestions, 3000);
         function showQuestions(){
             var textAreaArray = $("#container").find("textarea");
             var textString = "";
@@ -118,6 +118,13 @@
                 x.className += " w3-show";
             } else {
                 x.className = x.className.replace(" w3-show", "");
+            }
+            console.log("B" + id);
+            var y = document.getElementById("B"+id);
+            if (y.className.indexOf("w3-show") == -1) {
+                y.className += " w3-show";
+            } else {
+                y.className = y.className.replace(" w3-show", "");
             }
         }
         function populateText(id){
