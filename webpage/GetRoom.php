@@ -18,7 +18,7 @@ $textOpenClose = $_POST['textOpenClose'];
 
 
 
-$sql = "Select * from Questions where room = :roomCode";
+$sql = "Select * from Questions where room = :roomCode ORDER BY time_stamp";
 $compiled = oci_parse($conn, $sql);
 oci_bind_by_name($compiled, ":roomCode", $roomCode);
 oci_execute($compiled);
