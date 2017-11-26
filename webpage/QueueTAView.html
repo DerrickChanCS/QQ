@@ -11,10 +11,21 @@
     <div class="w3-container w3-centered w3-row">
         <h2 id = "RoomNum" class="w3-center"></h2>
     </div>
-    
-
+    <div class="w3-container w3-centered w3-row">
+        <h2 id ="displayText" class="w3-center"></h2>
+    </div>
+     <div class="w3-container w3-centered w3-row">
+        <h2 id = "whichUser" class="w3-center"></h2>
+    </div>
+    <div class="w3-container w3-centered w3-row"
+        style="margin-left: 14%">
+        <textarea id = editText style="height:100px; width: 70.5%; margin-bottom:20px"></textarea>
+        <button onclick ="answerQuestion()" class="w3-button w3-border"
+            style="margin-bottom:130px">
+            Submit Answer</button>
+    </div>
     <div id="devBtn" class="w3-row">
-        <button onclick="showQuestions()" class="w3-button
+        <button onclick="showQuestions()" class="w3-button w3-hide
             w3-border">DevButton
         </button>
     </div>
@@ -55,22 +66,23 @@
                         }
                     });
         }
-        /*
-        function submitQuestion(){
+       
+        function answerQuestion(){
+
             $.ajax({
                     type:"POST",
-                    url:"./SubmitQuestion.php", 
+                    url:"./updateQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
-                    "\u0026questionText=" + $("#Text1").val() +
-                    "\u0026userName=" + $("#userName").val(),
+                    "\u0026questionText=" + $("#editText").val() +
+                    "\u0026userName=" + $("#whichUser").text(),
                         success:function(data){
                             console.log(sessionStorage.roomCode);
-                            console.log($("#Text1").val()); 
+                           // console.log($("#Text1").val()); 
                             console.log(data.status);
                         }
                     });
         }
-        */
+        
         var currentDiv = document.getElementById("test1"); //keeps track of the current div
         var qNum = 0; //global var to give new questions a div with a unique id
         function testQuestionCreate() {
@@ -106,7 +118,19 @@
             }
 
         }
+        function populateText(id){
+            var x = document.getElementById(id);
+            var y = document.getElementById("editText");
+
+            $("#whichUser").text(id);
+            $("#displayText").text("Answering the following user's question: ");  
+            console.log($("#"+id).val());
+            $("#editText").val($("#"+id).val() + "\nAnswer: ");
+            y.focus();
+             
+        }
     </script>
+
     <script>
         function closeQuestion(id) {
             

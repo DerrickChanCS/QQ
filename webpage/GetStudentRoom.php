@@ -182,6 +182,7 @@ for(var i = 0; i< userNames.length; i++){
     //Text area
     var insertText = document.createElement('textarea');
     insertText.setAttribute("id", userNames[i]);
+    insertText.setAttribute("onclick", 'populateText(' + '\"' + userNames[i] + '\"' + ')');
 
     console.log(divDict[userNames[i]]);
     if (divDict[userNames[i]] == "true"){
@@ -192,7 +193,7 @@ for(var i = 0; i< userNames.length; i++){
     insertText.setAttribute("class", "w3-border w3-hide w3-container");
     }
     insertText.setAttribute("rows", "4");
-    //insertText.setAttribute("readonly", "");
+    insertText.setAttribute("readonly", "");
     insertText.setAttribute("style","height: 100px; width: 59.5%; margin-bottom: 20px");
 
     var boxText = document.createTextNode(questionText[i]);
