@@ -208,6 +208,7 @@ for(var i = 0; i< userNames.length; i++){
 
     //Update Button
     var updateButton = document.createElement('button');
+    console.log("test");
     updateButton.setAttribute("onclick", 'updateQuestion(' + '\"' + userNames[i] + '\"' + ')');
     //updateButton.setAttribute("class", "w3-button w3-hide w3-border");
     if (divDict[userNames[i]] == "true"){
