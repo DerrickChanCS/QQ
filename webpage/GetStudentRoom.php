@@ -161,45 +161,74 @@ for(var i = 0; i< userNames.length; i++){
     newDivChild3.appendChild(datePar);
 
     //onclick close question
-    var closeSpan = document.createElement('span');
-    closeSpan.setAttribute("onclick",'closeQuestion(' + '\"' +  userNames[i]+ '\"' + '), ' +  
-                           'this.parentElement.style.display = ' + '\"' + 'none' + '\"' + 
-                           ", this.parentElement.parentElement.style.display = " + '\"' + 'none' + '\"' );
-    closeSpan.setAttribute("class", "w3-button w3-border w3-dark-grey w3-large w3-display-topright");
-    closeSpan.setAttribute("style", "height: 51px");
-    
-    closeSpan.innerHTML = "&times;";
+    if(sessionStorage.username == userNames[i]){
+        var closeSpan = document.createElement('span');
+        closeSpan.setAttribute("onclick",'closeQuestion(' + '\"' +  userNames[i]+ '\"' + '), ' +  
+                               'this.parentElement.style.display = ' + '\"' + 'none' + '\"' + 
+                               ", this.parentElement.parentElement.style.display = " + '\"' + 'none' + '\"' );
+        closeSpan.setAttribute("class", "w3-button w3-border w3-dark-grey w3-large w3-display-topright");
+        closeSpan.setAttribute("style", "height: 51px");
+        
+        closeSpan.innerHTML = "&times;";
+    }
 
 
     //Append all to child 1
     newDivChild1.appendChild(newDivChild2);
     newDivChild1.appendChild(newDivChild3);
-    newDivChild1.appendChild(closeSpan);
+    if(sessionStorage.username == userNames[i])
+        newDivChild1.appendChild(closeSpan);
 
-    //Text area
+    //Text area ---------------------------
     var insertText = document.createElement('textarea');
     insertText.setAttribute("id", userNames[i]);
-    insertText.setAttribute("onclick", 'populateText(' + '\"'  + userNames[i] + '\"' + ')');
+    insertText.setAttribute("onclick", 'populateText(' + '\"' + userNames[i] + '\"' + ')');
+
     console.log(divDict[userNames[i]]);
     if (divDict[userNames[i]] == "true"){
-    insertText.setAttribute("class", "w3-border w3-show w3-hide w3-container");
+    insertText.setAttribute("class", "w3-border w3-col w3-show w3-hide w3-container w3-half");
     }
     else{
 
-    insertText.setAttribute("class", "w3-border w3-hide w3-container");
+    insertText.setAttribute("class", "w3-border w3-half w3-hide w3-container");
     }
     insertText.setAttribute("rows", "4");
-    insertText.setAttribute("readonly", "");
+    //change this back to readonly if they are not the owner of the question
+    //insertText.setAttribute("readonly", "");
     insertText.setAttribute("style","height: 100px; width: 59.5%; margin-bottom: 20px");
 
+    //Box text
     var boxText = document.createTextNode(questionText[i]);
     insertText.appendChild(boxText);
 
+    //Row for button and textbox
+    var textButtonRow = document.createElement('div');
+    textButtonRow.setAttribute("class", "w3-row");
+
+
+    //Update Button
+    var updateButton = document.createElement('button');
+    updateButton.setAttribute("onclick", 'updateQuestion(' + '\"' + userNames[i] + '\"' + ')');
+    //updateButton.setAttribute("class", "w3-button w3-hide w3-border");
+    if (divDict[userNames[i]] == "true"){
+    updateButton.setAttribute("class", "w3-button w3-border w3-show w3-hide");
+    }
+    else{
+
+    updateButton.setAttribute("class", "w3-button w3-border w3-hide");
+    }
+    updateButton.setAttribute("style", "margin-left: 5px; margin-top: 30px");
+    updateButton.setAttribute("id","B" + userNames[i]);
+    updateButton.innerHTML = "Update";
+
+
+    textButtonRow.appendChild(insertText);
+    textButtonRow.appendChild(updateButton);
 
 
     //Append Child 1 to newDiv
     newDiv.appendChild(newDivChild1);
-    newDiv.appendChild(insertText);
+    newDiv.appendChild(textButtonRow);
 
     //Append newDiv to container
     container.appendChild(newDiv);

@@ -45,8 +45,9 @@
 <!-- PHP CODE for randomizing room code. Code will send the value to the database
     , and use the value for display purposes on this page-->
 <?php
-    $conn = oci_connect( 'UserName',
-                         'Password',
+    include 'password.php';
+    $conn = oci_connect( $username,
+                         $password,
                          '//dbserver.engr.scu.edu/db11g');
     if ($conn) { print "Connected";}
     else { print "Connection failed <br />"; exit;}
@@ -55,64 +56,55 @@
                      "G","H","I","J","K","L","M","N",
                      "O","P","Q","R","S","T","U","V",
                      "W","X","Y","Z");
-
+    $badwords = array("FUCK","FUKC","CUNT",
+                      "DICK","SHIT","DAMN","CRAP","KRAP","BDSM");
     session_start();
 
+    do {
     $rand_keys = array_rand($letters, 4);
     $str = $letters[$rand_keys[0]] . $letters[$rand_keys[1]]
            . $letters[$rand_keys[2]] 
            . $letters[$rand_keys[3]];
-
+    }while(in_array($str,$badwords));
     echo $str;
+
     $_SESSION['room_code'] = $str;
 
-    $sql = "INSERT INTO ROOMS VALUES ('$str', 0)";
-    $sql_statement = OCIParse($conn, $sql);
-    OCIexecute($sql_statement);
-    OCIFreeStatement($sql_statement);
-    OCILogoff($conn);
+    //$sql = "INSERT INTO ROOMS VALUES ('$str', 0)";
+    //$sql_statement = OCIParse($conn, $sql);
+    //OCIexecute($sql_statement);
+    //OCIFreeStatement($sql_statement);
+    //OCILogoff($conn);
 ?>
 
 
 
 <body>
-    <div class="w3-container w3-centered">
-    <h2 class="w3-center w3-half">Room </h2> <h2 class="w3-half" id="roomCode"> <?php echo $str; ?></h2>
-        <p class="w3-center">This is the code the students will need to enter in order to access the room</p>
-        <div class="w3-row" style="margin-left: 27%; margin-right: 15%">
-            <div class="w3-row" style="margin-bottom: 30px">
-                <label>Create Tags if desired</label>
-                <div>
-                    <form id = "send_tag" action = "RoomSetupDB.php" method = "post">
-                        <input class="w3-input w3-border w3-round w3-half" style="width: 30%" id="Text1" type="text" name = "tag" />
-                        <button type = "submit" class="w3-button w3-half w3-medium w3-round" style="width: 30%; margin-left: 20%">Create Tag</button>
-                    </form>
-                    <div id = "results"> </div>
-                </div>
-            </div>
-            <div class="w3-row">
-                <label>
-                    Edit Tag List
-                </label>
-                <br />
-                <select id = "tag_dropdown" class="w3-select w3-border w3-half" style="width: 30%">
-                    <option>Test</option>
-                    <option>Test2</option>
-
-                </select>
-                <button class="w3-button w3-half w3-medium w3-round" style="width: 30%; margin-left: 20%">Remove Selected Tag</button>
-            </div>
-
-        </div>
-        <div class="w3-row w3-center" style="margin-top:150px">
-          <button onclick="nextpage()" class="w3-button">Launch Room</button>
+    <div class="w3-row w3-container w3-centered">
+    <h2 class=" w3-center w3-row" id="roomCode">Room: <?php echo $str; ?></h2>
+        <p class="w3-center w3-row ">This is the code the students will need to enter in order to access the room</p>
+                <div class="w3-row w3-center" style="margin-top:150px">
+          <button onclick="nextpage()" class="w3-button w3-border">Launch Room</button>
         </div>
     </div>
     <script> 
     function nextpage(){
-          sessionStorage.roomCode = "<?php echo $str; ?>"; 
-          console.log("TA ROOM STUFF" + sessionStorage.roomCode);
-          window.location.href = "QueueStudentView.html";
+          $RoomCode = "<?php echo $str; ?>";
+          //window.alert($RoomCode);
+          $.ajax({
+              url:'ConfirmRoom.php',
+              data: { RoomCode : $RoomCode},
+              type: "POST",
+              success: function(a){
+                  //alert('Hello from PHP: ' + a);
+                  sessionStorage.roomCode = "<?php echo $str; ?>"; 
+                  console.log("TA ROOM STUFF" + sessionStorage.roomCode);
+                  window.location.href = "QueueTAView.html";
+              },
+              error: function(data){
+                  console.log(data);
+              }
+         });
 }
 </script>
 </body>

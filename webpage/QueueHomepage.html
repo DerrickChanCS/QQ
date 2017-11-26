@@ -2,71 +2,88 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-    <script
+<meta charset="utf-8" />
+<title></title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+<script
 src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 </head>
 <body>
-    <div class="w3-container" style="width: 100%">
-        <div class="w3-row-padding">
+<div class="w3-container" style="width: 100%">
+    <div class="w3-row-padding">
 
-            <div class="w3-col w3-center" style="width: 70%; margin-left: 15%; margin-right: 15%">
-                <h1 style="font-family:'Agency FB'">Queue</h1>
-                <div class="w3-containter w3-panel w3-card-4">
-                    <label>Room Code</label>
-                    <div class="">
-                        <input class="w3-input w3-border" id="Text1" type="text" style="width: 30%; margin-left:35%" />
-                        <p></p>
-                        <button onclick="enterRoom()" class="w3-button w3-round">Enter Room</button>
-                    </div>
+        <div class="w3-col w3-center" style="width: 70%; margin-left: 15%; margin-right: 15%">
+            <h1 style="font-family:'Agency FB'">Queue</h1>
+            <div class="w3-containter w3-panel w3-card-4">
+                <label>Room Code</label>
+                <div class="">
+                    <input class="w3-input w3-border w3-center" id="Text1" type="text" style="width: 30%; margin-left:35%" />
                     <p></p>
-
+                    <label> UserName for Room Session </label>
+                    <div>
+                        <input class="w3-input w3-border w3-center" id="UsernameText" type="text" style="width: 30%; margin-left:35%" />
+                    </div>
+                    <button onclick="enterRoom()" class="w3-button
+                        w3-border w3-round" style="margin-top: 15px">Enter Room</button>
                 </div>
+                <p></p>
 
-    <script>
-        function enterRoom(){
-            var roomCode = $("#Text1").val();
-            sessionStorage.roomCode = roomCode;
-            console.log(roomCode);
-            $.ajax({
-                    type:"POST",
-                    url:"./Validate.php",
-                    data:"roomCode=" + sessionStorage.roomCode,
-                    success:function(data){
-                        console.log(data);
-                        //var objData  = jQuery.parseJSON(data);
-                        console.log("Hello There General Kenobi");
-                        if (data["isExists"] == "false"){
-                                alert("Room Does Not Exist");
-                            }else{
-                                window.location.href = "QueueStudentView.html";
-                            }
-                    }
-
-                    });
-            
-        }
-    </script>
-
-
-                <p>
-                <a href="QueueTARoomSetUpPage.php"><button class="w3-button
-                        w3-round">Create New Room</button></a>
-                </p>
-                <p>
-                    &nbsp;
-                </p>
-                <p>
-                    <input class="w3-input w3-half" id="File1" type="file" style="width:40%; margin-left:7.5%"/>       
-                    <button class="w3-button w3-round w3-half w3-large" style="margin-left:5%; width:40%">Open Previous Session</button>
-                </p>
             </div>
 
+            <script>
+function enterRoom(){
+    var roomCode = $("#Text1").val();
+    sessionStorage.roomCode = roomCode;
+    //put new textbox for user name
+    //textbox id should be UsernameText
+    sessionStorage.username = $("#UsernameText").val();
+    if(sessionStorage.username.length == 0){
+        alert("Please enter a username.");
+        return;
+    }
+    //sessionStorage.username = "testuser";
+    console.log(roomCode);
+    $.ajax({
+type:"POST",
+url:"./Validate.php",
+data:"roomCode=" + sessionStorage.roomCode
++ "\u0026username=" + sessionStorage.username,
+success:function(data){
+console.log(data);
+//var objData  = jQuery.parseJSON(data);
+//console.log("Hello There General Kenobi");
+if (data["roomExists"] == "false"){
+alert("Room Does Not Exist");
+}else{
+if (data["usernameExists"] == "true"){
+alert("Username already exists. Try another");
+} else{
+window.location.href = "QueueStudentView.html";
+}
+}
+}
+
+});
+
+}
+            </script>
+
+
+            <p>
+            <a href="QueueTARoomSetUpPage.php"><button class="w3-button
+                    w3-round">Create New Room</button></a>
+            </p>
+            <p>
+            &nbsp;
+            </p>
+            <p>
+            </p>
         </div>
 
     </div>
+
+</div>
+
 
 </body>
 </html>

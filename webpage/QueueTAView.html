@@ -11,19 +11,21 @@
     <div class="w3-container w3-centered w3-row">
         <h2 id = "RoomNum" class="w3-center"></h2>
     </div>
-    <div class="w3-row w3-centered">
-        <h3 id = "UserID" class="w3-center"></h3> 
+    <div class="w3-container w3-centered w3-row">
+        <h2 id ="displayText" class="w3-center"></h2>
     </div>
-    <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
-        <textarea id="Text1" class="w3-input w3-border w3-half" rows="5" style="width: 54%"></textarea>
-        <button onclick="submitQuestion()" class="w3-button w3-border" style="margin-left: 1%; margin-top: 30px">Submit</button> <!-- will need to update function to pass in params from the text box and their station num and any tags used, tag functionality may have to wait-->
-
+     <div class="w3-container w3-centered w3-row">
+        <h2 id = "whichUser" class="w3-center"></h2>
     </div>
-   
-        <!-- echo this out depending on the number of tags that get created, might have to limit based on character length and number of tags -->
+    <div class="w3-container w3-centered w3-row"
+        style="margin-left: 14%">
+        <textarea id = editText style="height:100px; width: 70.5%; margin-bottom:20px"></textarea>
+        <button onclick ="answerQuestion()" class="w3-button w3-border"
+            style="margin-bottom:130px">
+            Submit Answer</button>
     </div>
     <div id="devBtn" class="w3-row">
-        <button onclick="showQuestions()" class="w3-button
+        <button onclick="showQuestions()" class="w3-button w3-hide
             w3-border">DevButton
         </button>
     </div>
@@ -31,26 +33,30 @@
     <script>
         document.getElementById("RoomNum").innerHTML = "Room " +
         sessionStorage.roomCode;
-        document.getElementById("UserID").innerHTML = "User Name : " +
-        sessionStorage.username;
         var currentDivNum = 0;
-        //setInterval(showQuestions, 3000);
+        console.log("current div num from TAVIEW: " +currentDivNum);
+        setInterval(showQuestions, 3000);
+       
         function showQuestions(){
+            console.log("HERE");
+
             var textAreaArray = $("#container").find("textarea");
+            console.log(textAreaArray);
             var textString = "";
             var tf = "";
-            for ( var x = 0; x < textAreaArray.length; x++)
-            {
+            for(var x = 0; x < textAreaArray.length; x++){
                 tf = $("#" + textAreaArray[x].id).hasClass("w3-show");
-                textString = textString.concat(textAreaArray[x].id, ",", tf,
-                        "%");
-
+                textString = textString.concat(textAreaArray[x].id, ",", tf, "%");
             }
             textString = textString.substring(0, textString.length -1);
 
+            console.log(textString);
+
+
+
             $.ajax({
                     type:"POST",
-                    url:"./GetStudentRoom.php",
+                    url:"./GetRoom.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026currentDivNum=" + currentDivNum +
                     "\u0026textOpenClose=" + textString,
@@ -60,47 +66,23 @@
                         }
                     });
         }
-        function submitQuestion(){
+       
+        function answerQuestion(){
+
             $.ajax({
                     type:"POST",
-                    url:"./CheckUserQuestion.php", 
-                    data: "roomCode=" + sessionStorage.roomCode +
-                    "\u0026username=" + sessionStorage.username,
-                        success:function(data){
-                            if(data["questionExists"] == "true"){
-                                alert("You already submitted a question! Delete your previous question or wait until your current question is answered.");
-                            }else{
-                                $.ajax({
-                                        type:"POST",
-                                        url:"./SubmitQuestion.php", 
-                                        data: "roomCode=" + sessionStorage.roomCode +
-                                        "\u0026questionText=" + $("#Text1").val() +
-                                        "\u0026userName=" + sessionStorage.username,
-                                            success:function(data){
-                                                console.log(sessionStorage.roomCode);
-                                                console.log($("#Text1").val()); 
-                                                console.log(data.status);
-                                            }
-                                        });
-                            }
-                        }
-                    });
-        }
-        function updateQuestion(id){
-            $.ajax({
-             type:"POST",
                     url:"./updateQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
-                    "\u0026questionText=" + $("#"+ id).val() +
-                    "\u0026userName=" + sessionStorage.username,
+                    "\u0026questionText=" + $("#editText").val() +
+                    "\u0026userName=" + $("#whichUser").text(),
                         success:function(data){
                             console.log(sessionStorage.roomCode);
-                            console.log($("#" + id).val()); 
-                            console.log(sessionStorage.username);
+                           // console.log($("#Text1").val()); 
                             console.log(data.status);
                         }
                     });
         }
+        
         var currentDiv = document.getElementById("test1"); //keeps track of the current div
         var qNum = 0; //global var to give new questions a div with a unique id
         function testQuestionCreate() {
@@ -134,23 +116,23 @@
             } else {
                 x.className = x.className.replace(" w3-show", "");
             }
-            console.log("B" + id);
-            var y = document.getElementById("B"+id);
-            if (y.className.indexOf("w3-show") == -1) {
-                y.className += " w3-show";
-            } else {
-                y.className = y.className.replace(" w3-show", "");
-            }
+
         }
         function populateText(id){
-            
+            var x = document.getElementById(id);
+            var y = document.getElementById("editText");
+
+            $("#whichUser").text(id);
+            $("#displayText").text("Answering the following user's question: ");  
+            console.log($("#"+id).val());
+            $("#editText").val($("#"+id).val() + "\nAnswer: ");
+            y.focus();
+             
         }
     </script>
+
     <script>
         function closeQuestion(id) {
-            if(sessionStorage.username != id){
-               return;
-            }
             
             var x = document.getElementById(id);
             if (x.className.indexOf("w3-show") == -1) {
@@ -159,21 +141,21 @@
                 x.className = x.className.replace(" w3-show", "");
             }
             document.getElementById(id).style.display = "none";
+            console.log("In close question: " +id);
             //Ajax post to remove sessionName from DB
             $.ajax({
                     type:"POST",
-                    url:"./RemoveQuestion.php",
+                    url:"./RemoveQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026username=" + id,
                     success:function(data){
-                            console.log("done with removeQuestion.php");
+                        console.log("done with removeQuestion.php");
                         }
                     });
-            
         }
+
     </script>
 </body>
 </html>
-
 
 
