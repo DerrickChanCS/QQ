@@ -193,7 +193,8 @@ for(var i = 0; i< userNames.length; i++){
     insertText.setAttribute("class", "w3-border w3-half w3-hide w3-container");
     }
     insertText.setAttribute("rows", "4");
-    insertText.setAttribute("readonly", "");
+    //change this back to readonly if they are not the owner of the question
+    //insertText.setAttribute("readonly", "");
     insertText.setAttribute("style","height: 100px; width: 59.5%; margin-bottom: 20px");
 
     //Box text
@@ -207,7 +208,15 @@ for(var i = 0; i< userNames.length; i++){
 
     //Update Button
     var updateButton = document.createElement('button');
-    updateButton.setAttribute("class", "w3-button w3-hide w3-border");
+    updateButton.setAttribute("onclick", 'updateQuestion(' + '\"' + userNames[i] + '\"' + ')');
+    //updateButton.setAttribute("class", "w3-button w3-hide w3-border");
+    if (divDict[userNames[i]] == "true"){
+    updateButton.setAttribute("class", "w3-button w3-border w3-show w3-hide");
+    }
+    else{
+
+    updateButton.setAttribute("class", "w3-button w3-border w3-hide");
+    }
     updateButton.setAttribute("style", "margin-left: 5px; margin-top: 30px");
     updateButton.setAttribute("id","B" + userNames[i]);
     updateButton.innerHTML = "Update";

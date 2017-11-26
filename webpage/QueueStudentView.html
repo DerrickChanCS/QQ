@@ -86,6 +86,21 @@
                         }
                     });
         }
+        function updateQuestion(id){
+            $.ajax({
+             type:"POST",
+                    url:"./updateQuestion.php", 
+                    data: "roomCode=" + sessionStorage.roomCode +
+                    "\u0026questionText=" + $("#"+ id).val() +
+                    "\u0026userName=" + sessionStorage.username,
+                        success:function(data){
+                            console.log(sessionStorage.roomCode);
+                            console.log($("#" + id).val()); 
+                            console.log(sessionStorage.username);
+                            console.log(data.status);
+                        }
+                    });
+        }
         var currentDiv = document.getElementById("test1"); //keeps track of the current div
         var qNum = 0; //global var to give new questions a div with a unique id
         function testQuestionCreate() {
