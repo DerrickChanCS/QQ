@@ -2,3 +2,4 @@
 .DS_Store
 password.php
 *.swp
+sqlnet.log
