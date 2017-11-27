@@ -7,20 +7,21 @@
     $roomCode      = $_POST['roomCode'];
     $question_text = $_POST['questionText'];
     $userName      = $_POST['userName'];
+    $fromStudent   = $_POST['fromStudent'];
     $date          = date('Y-m-d H:i:s',time());
 
-    $sql = "UPDATE Questions set question_text = :questionText , isresolved = 'y' , time_stamp = :ts WHERE username = :username AND room = :room";
+    $sql = "UPDATE Questions set question_text = :questionText , isresolved = :fromStudent , time_stamp = :ts WHERE username = :username AND room = :room";
     $compiled = oci_parse($conn, $sql);
 
     oci_bind_by_name($compiled, ':room', $roomCode);
     oci_bind_by_name($compiled, ':questionText', $question_text);
     oci_bind_by_name($compiled, ':username', $userName);
     oci_bind_by_name($compiled, ':ts', $date);
+    oci_bind_by_name($compiled, ':fromStudent', $fromStudent);
 
     oci_execute($compiled);
     $response_array['status'] = 'response test';
     echo "done";
-    
     
 
     OCILogoff($conn);

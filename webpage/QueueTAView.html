@@ -77,7 +77,8 @@
                     url:"./updateQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026questionText=" + $("#editText").val() +
-                    "\u0026userName=" + $("#whichUser").text(),
+                    "\u0026userName=" + $("#whichUser").text() +
+                    "\u0026fromStudent=" + 'y',
                         success:function(data){
                             console.log("done answering question");
                             console.log(sessionStorage.roomCode);
