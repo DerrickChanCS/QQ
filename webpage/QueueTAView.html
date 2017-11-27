@@ -159,6 +159,33 @@
         }
 
     </script>
+    <script>
+    	function download(data, filename, type){
+            var file = new Blob([data], {type: type});
+            //var file = data;
+            console.log(file);
+            var a  = document.createElement("a"),
+                     url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+       
+       function saveSession(){
+           //openAllQuestions();
+           console.log("Woop");
+           //var stuff = document.documentElement.innerHTML;
+           var stuff = document.getElementById("container").innerHTML;
+           download(stuff, "SavedSession" + sessionStorage.roomCode + ".html", 'plain/html');
+       }
+
+    </script>
+<button onclick="saveSession()" class = "w3-button w3-border"> Save Session </button>
 </body>
 </html>
 

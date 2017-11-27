@@ -6,8 +6,9 @@
     <title></title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
 </head>
-<body>
+<body id = "body">
     <div class="w3-container w3-centered w3-row">
         <h2 id = "RoomNum" class="w3-center"></h2>
     </div>
@@ -34,7 +35,7 @@
         document.getElementById("UserID").innerHTML = "User Name : " +
         sessionStorage.username;
         var currentDivNum = 0;
-        //setInterval(showQuestions, 3000);
+        setInterval(showQuestions, 3000);
         function showQuestions(){
             var textAreaArray = $("#container").find("textarea");
             var textString = "";
@@ -83,21 +84,6 @@
                                             }
                                         });
                             }
-                        }
-                    });
-        }
-        function updateQuestion(id){
-            $.ajax({
-             type:"POST",
-                    url:"./updateQuestion.php", 
-                    data: "roomCode=" + sessionStorage.roomCode +
-                    "\u0026questionText=" + $("#"+ id).val() +
-                    "\u0026userName=" + sessionStorage.username,
-                        success:function(data){
-                            console.log(sessionStorage.roomCode);
-                            console.log($("#" + id).val()); 
-                            console.log(sessionStorage.username);
-                            console.log(data.status);
                         }
                     });
         }
@@ -165,6 +151,7 @@
                     url:"./RemoveQuestion.php",
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026username=" + id,
+
                     success:function(data){
                             console.log("done with removeQuestion.php");
                         }
@@ -172,6 +159,47 @@
             
         }
     </script>
+
+    <script>
+        function openAllQuestions(){
+            var nodes = document.getElementsByTagName("textarea");
+            for(var i=0; i<nodes.length; i++){
+                console.log("Hi!!" + nodes[i].id);
+                if(nodes[i].id != null && nodes[i].id != "Text1"){
+                    expandQuestion(nodes[i].id);
+                }
+            }
+       }
+
+	function download(data, filename, type){
+            var file = new Blob([data], {type: type});
+            //var file = data;
+            console.log(file);
+            var a  = document.createElement("a"),
+                     url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+       
+       function saveSession(){
+           //openAllQuestions();
+           console.log("Woop");
+           //var stuff = document.documentElement.innerHTML;
+           var stuff = document.getElementById("container").innerHTML;
+           download(stuff, "SavedSession" + sessionStorage.roomCode + ".html", 'plain/html');
+       }
+
+
+    </script>
+
+    <button onclick="saveSession()" class = "w3-button w3-border"> Save Session </button>
+    <!-- <a onclick="this.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.documentElement.innerHTML)" href="#" download="page.html">Download</a> -->
 </body>
 </html>
 
