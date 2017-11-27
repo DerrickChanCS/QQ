@@ -46,13 +46,16 @@
             var tf = "";
             for(var x = 0; x < textAreaArray.length; x++){
                 tf = $("#" + textAreaArray[x].id).hasClass("w3-show");
-                textString = textString.concat(textAreaArray[x].id, ",", tf, "%");
+                textString = textString.concat(textAreaArray[x].id, ",", tf, '?');
             }
             textString = textString.substring(0, textString.length -1);
 
-            console.log(textString);
+            console.log("string to post: " +textString);
 
-
+            console.log("data to post: "
+                    +"roomCode=" + sessionStorage.roomCode +
+                    "\u0026currentDivNum=" + currentDivNum +
+                    "\u0026textOpenClose=" + textString);
 
             $.ajax({
                     type:"POST",
@@ -76,6 +79,7 @@
                     "\u0026questionText=" + $("#editText").val() +
                     "\u0026userName=" + $("#whichUser").text(),
                         success:function(data){
+                            console.log("done answering question");
                             console.log(sessionStorage.roomCode);
                            // console.log($("#Text1").val()); 
                             console.log(data.status);
