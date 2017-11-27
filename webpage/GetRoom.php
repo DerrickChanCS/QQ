@@ -29,23 +29,18 @@ $userNames = array();
 $tagArray = array();
 $textArray = array();
 $dateArray = array();
+$resolvedArray = array();
 
 $currentDivNum = $_POST['currentDivNum'];
-//echo "currentDivNum from getRoom.php: $currentDivNum";
 
 while (OCIFetch($compiled)){
-    //    echo "<tr>";
-    //    if var is less than current div num then do nothing
     for ($i = 1; $i <= $num_columns; $i++) {
         $column_value = OCIResult($compiled, $i);
-              //echo "<td>$column_value</td>";
         if ($i == 2){
             array_push($tagArray, $column_value);
         }
         if ($i == 3){
             array_push($textArray, $column_value);
-            //echo $column_value;
-            //echo $textArray[0];
         }
         if ($i == 4){
             array_push($dateArray, $column_value);
@@ -53,25 +48,17 @@ while (OCIFetch($compiled)){
         if ($i == 5){
             array_push($userNames, $column_value);
         }
+        if ($i == 6){
+            array_push($resolvedArray, $column_value);
+        }
 
     }
 }
-
-/*
-for ($i = 0; $i < count($textArray); $i++){
-    echo "<br>";
-    echo $userNames[$i];
-    echo "<br>";
-    echo $textArray[$i] . " ";
-    echo $tagArray[$i];
-    echo $dateArray[$i];
-   // echo "<br>";
-} 
- */
 $json_usernames = json_encode($userNames);
-$json_text = json_encode($textArray);
-$json_date = json_encode($dateArray);
-$json_tags = json_encode($tagArray);
+$json_text      = json_encode($textArray);
+$json_date      = json_encode($dateArray);
+$json_tags      = json_encode($tagArray);
+$json_resolved  = json_encode($resolvedArray);
 
 ?>
 
@@ -80,18 +67,17 @@ $json_tags = json_encode($tagArray);
 </div>
 
 <script>
-var userNames = <?php echo $json_usernames; ?>;
-var questionText = <?php echo $json_text; ?>;
-var dates = <?php echo $json_date; ?>;
-var tags = <?php echo $json_tags; ?>;
+var userNames     = <?php echo $json_usernames; ?>;
+var questionText  = <?php echo $json_text; ?>;
+var dates         = <?php echo $json_date; ?>;
+var tags          = <?php echo $json_tags; ?>;
 var currentDivNum = <?php echo $currentDivNum; ?>;
-console.log(userNames);
+var resolved      = <?php echo $json_resolved; ?>;
 var divCount = currentDivNum;
 
-console.log("test");
 
 var divMap = "<?php echo $textOpenClose; ?>";
-var divVal = divMap.split("%");
+var divVal = divMap.split("?");
 var temp ="";
 var divDict = {};
 
@@ -127,7 +113,11 @@ for(var i = 0; i< userNames.length; i++){
     //Child 2 onclick expand
     var newDivChild2 = document.createElement("div");
     newDivChild2.setAttribute('onclick', 'expandQuestion(' + '\"' +  userNames[i]+ '\"' + ')');
-    newDivChild2.setAttribute('class', 'w3-display-left w3-dark-grey w3-center');
+    if(resolved[i] == 'n'){
+      newDivChild2.setAttribute('class', 'w3-display-left w3-dark-grey w3-center');
+    } else{
+      newDivChild2.setAttribute('class', 'w3-display-left w3-red w3-center');
+    }
     newDivChild2.setAttribute('style', 'width: 50%; height: 100px;');
     //newDivChild
 
