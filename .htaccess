@@ -1,0 +1,2 @@
+AddType application/x-httpd-php-cgi .php
+Action application/x-httpd-php-cgi /~dchan1/cgi-bin/php-cgi.cgi

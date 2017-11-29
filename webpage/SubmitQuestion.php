@@ -1,15 +1,4 @@
 <?php
-    //fclose(STDIN);
-    //fclose(STDOUT);
-    //fclose(STDERR);
-    //$STDIN  = fopen('log.txt', 'w+');
-    $STDOUT = fopen('log.txt', 'w');
-    //$STDERR = fopen('log.txt', 'w+');
-    print "test";
-    echo "echo test from echo";
-
-
-    fwrite($STDOUT, "echo test");
     include 'password.php';
     $conn = oci_connect( $username,
                         $password,
@@ -17,6 +6,7 @@
     if ($conn) {}
     $roomCode      = $_POST['roomCode'];
     $question_text = $_POST['questionText'];
+    echo $_POST['questionText'];
     $userName      = $_POST['userName'];
     $date          = date('Y-m-d H:i:s',time());
 

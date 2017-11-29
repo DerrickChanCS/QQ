@@ -3,7 +3,11 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Queue</title>
+    <link rel="icon"
+          type="image/png"
+          href="favicon-96x96.png">
+
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 </head>
@@ -19,12 +23,13 @@
     </div>
     <div class="w3-container w3-centered w3-row"
         style="margin-left: 14%">
-        <textarea id = editText style="height:100px; width: 70.5%; margin-bottom:20px"></textarea>
+        <textarea id = editText placeholder = "Character limit of 3999 characters" maxlength = "3999" style="height:100px; width: 70.5%; margin-bottom:20px"></textarea>
         <button onclick ="answerQuestion()" class="w3-button w3-border"
             style="margin-bottom:130px">
             Submit Answer</button>
     </div>
     <div id="devBtn" class="w3-row">
+        <button onclick="saveSession()" class = "w3-button w3-border" style = "margin-left:15%"> Save Session </button>
         <button onclick="showQuestions()" class="w3-button w3-hide
             w3-border">DevButton
         </button>
@@ -35,9 +40,11 @@
         sessionStorage.roomCode;
         var currentDivNum = 0;
         console.log("current div num from TAVIEW: " +currentDivNum);
-        setInterval(showQuestions, 3000);
+        var updateInterval = setInterval(showQuestions, 6000);
        
         function showQuestions(){
+            clearInterval(updateInterval);
+            updateInterval = setInterval(showQuestions, 6000);
             console.log("HERE");
 
             var textAreaArray = $("#container").find("textarea");
@@ -62,7 +69,7 @@
                     url:"./GetRoom.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026currentDivNum=" + currentDivNum +
-                    "\u0026textOpenClose=" + textString,
+                    "\u0026textOpenClose=" + encodeURIComponent(textString),
                     success:function(data){
                         console.log(sessionStorage.roomCode);
                         $("#test1").html(data);
@@ -71,12 +78,16 @@
         }
        
         function answerQuestion(){
+            if(sessionStorage.dateString != $("#date_"+$("#whichUser").text()).text()){
+                alert("The question was moved or deleted by the student");
+                return;
+            }
 
             $.ajax({
                     type:"POST",
                     url:"./updateQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
-                    "\u0026questionText=" + $("#editText").val() +
+                    "\u0026questionText=" + encodeURIComponent($("#editText").val() + " ") +
                     "\u0026userName=" + $("#whichUser").text() +
                     "\u0026fromStudent=" + 'y',
                         success:function(data){
@@ -84,6 +95,8 @@
                             console.log(sessionStorage.roomCode);
                            // console.log($("#Text1").val()); 
                             console.log(data.status);
+                            $("#editText").val("");
+                           showQuestions();
                         }
                     });
         }
@@ -108,12 +121,16 @@
             xhttp.open("GET", "test.php?q=" + qNum + "&t=" + questionTextContent, true); //passes the qnum to get added to the php file. Allows each question panel to have elements with unique ids so they can call the expand/close question functions without conflicting with eachother
             xhttp.send();
         }
+        $(document).ready(function(){
+            showQuestions();
+        });
     </script>
     <div id="questions">
         <div id="test1"></div>
     </div>
 
     <script>
+        var dateString = "";
         function expandQuestion(id) {
             var x = document.getElementById(id);
             if (x.className.indexOf("w3-show") == -1) {
@@ -132,6 +149,10 @@
             console.log($("#"+id).val());
             $("#editText").val($("#"+id).val() + "\nAnswer: ");
             y.focus();
+            sessionStorage.dateString = $("#date_"+id).text();
+            console.log($("#date_"+id).text());
+            console.log(sessionStorage.dateString);
+            console.log("after populate text");
              
         }
     </script>
@@ -186,7 +207,6 @@
        }
 
     </script>
-<button onclick="saveSession()" class = "w3-button w3-border"> Save Session </button>
 </body>
 </html>
 

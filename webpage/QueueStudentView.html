@@ -3,7 +3,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Queue</title>
+    <link rel="icon"
+            type="image/png"
+            href="favicon-96x96.png">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
@@ -12,11 +15,13 @@
     <div class="w3-container w3-centered w3-row">
         <h2 id = "RoomNum" class="w3-center"></h2>
     </div>
+
     <div class="w3-row w3-centered">
         <h3 id = "UserID" class="w3-center"></h3> 
     </div>
+
     <div class="w3-row" style="margin-left: 15%; margin-top: 30px">
-        <textarea id="Text1" class="w3-input w3-border w3-half" rows="5" style="width: 54%"></textarea>
+        <textarea id="Text1" placeholder = "Character limit of 3999 characters" maxlength = "3999" class="w3-input w3-border w3-half" rows="5" style="width: 54%"></textarea>
         <button onclick="submitQuestion()" class="w3-button w3-border" style="margin-left: 1%; margin-top: 30px">Submit</button> <!-- will need to update function to pass in params from the text box and their station num and any tags used, tag functionality may have to wait-->
 
     </div>
@@ -24,8 +29,10 @@
         <!-- echo this out depending on the number of tags that get created, might have to limit based on character length and number of tags -->
     </div>
     <div id="devBtn" class="w3-row">
+        <br>
+        <button onclick="saveSession()" class = "w3-button w3-border" style = "margin-left: 15%"> Save Session </button>
         <button onclick="showQuestions()" class="w3-button
-            w3-border">DevButton
+            w3-border w3-hide">DevButton
         </button>
     </div>
 
@@ -35,8 +42,10 @@
         document.getElementById("UserID").innerHTML = "User Name : " +
         sessionStorage.username;
         var currentDivNum = 0;
-        setInterval(showQuestions, 3000);
+        var updateInterval = setInterval(showQuestions, 6000);
         function showQuestions(){
+            clearInterval(updateInterval);
+            updateInterval = setInterval(showQuestions, 6000);
             if( $("#"+sessionStorage.username).is(":focus")){
                 return;
             }
@@ -64,6 +73,9 @@
                         }
                     });
         }
+        $(document).ready(function() {
+            showQuestions();
+        });
         function submitQuestion(){
             $.ajax({
                     type:"POST",
@@ -78,27 +90,30 @@
                                         type:"POST",
                                         url:"./SubmitQuestion.php", 
                                         data: "roomCode=" + sessionStorage.roomCode +
-                                        "\u0026questionText=" + $("#Text1").val() +
+                                        "\u0026questionText=" + encodeURIComponent($("#Text1").val()+" ") +
                                         "\u0026userName=" + sessionStorage.username,
                                             success:function(data){
                                                 console.log(sessionStorage.roomCode);
                                                 console.log($("#Text1").val()); 
                                                 console.log(data.status);
+                                                showQuestions(); 
                                             }
                                         });
                             }
                         }
                     });
+           console.log("done with submit question, showing questins");
         }
         function updateQuestion(id){
             $.ajax({
                 type: "POST",
                 url:  "./updateQuestion.php",
                 data: "roomCode=" + sessionStorage.roomCode +
-                      "\u0026questionText=" + $("#" + id).val() +
+                      "\u0026questionText=" + encodeURIComponent($("#" + id).val()+ " ") +
                       "\u0026userName=" + sessionStorage.username +
                       "\u0026fromStudent=" + "n",
                 success: function(data){
+                    showQuestions();
                 }
             });
         }
@@ -128,6 +143,7 @@
     </div>
 
     <script>
+        sessionStorage.alertFlag = false;
         function expandQuestion(id) {
             var x = document.getElementById(id);
             if (x.className.indexOf("w3-show") == -1) {
@@ -213,7 +229,6 @@
 
     </script>
 
-    <button onclick="saveSession()" class = "w3-button w3-border"> Save Session </button>
     <!-- <a onclick="this.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.documentElement.innerHTML)" href="#" download="page.html">Download</a> -->
 </body>
 </html>

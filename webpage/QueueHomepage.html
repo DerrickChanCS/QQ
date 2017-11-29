@@ -3,8 +3,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <title>Queue</title>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+  <title>Queue</title>
   <link rel="icon"
         type="image/png"
         href="favicon-96x96.png">
@@ -35,46 +35,63 @@
             </div>
 
             <script>
-function enterRoom(){
-    var roomCode = $("#Text1").val();
-    sessionStorage.roomCode = roomCode;
-    //put new textbox for user name
-    //textbox id should be UsernameText
-    sessionStorage.username = $("#UsernameText").val();
-    if(sessionStorage.username.length == 0){
-        alert("Please enter a username.");
-        return;
-    }
-    //sessionStorage.username = "testuser";
-    console.log(roomCode);
-    $.ajax({
-type:"POST",
-url:"./Validate.php",
-data:"roomCode=" + sessionStorage.roomCode
-+ "\u0026username=" + sessionStorage.username,
-success:function(data){
-console.log(data);
-//var objData  = jQuery.parseJSON(data);
-//console.log("Hello There General Kenobi");
-if (data["roomExists"] == "false"){
-alert("Room Does Not Exist");
-}else{
-if (data["usernameExists"] == "true"){
-alert("Username already exists. Try another");
-} else{
-window.location.href = "QueueStudentView.html";
-}
-}
-}
+            function enterRoom(){
+                var roomCode = $("#Text1").val().toUpperCase();
+                
+                sessionStorage.roomCode = roomCode;
+                //put new textbox for user name
+                //textbox id should be UsernameText
+                sessionStorage.username = $("#UsernameText").val();
+                if(sessionStorage.username.length == 0){
+                    alert("Please enter a username.");
+                    return;
+                }
+                if(!isAlphaNumeric(sessionStorage.username)){
+                    alert("Your username can only contain Alphanumeric characters!");
+                    return;
+                }
+                //sessionStorage.username = "testuser";
+                console.log(roomCode);
+                $.ajax({
+                    type:"POST",
+                    url:"./Validate.php",
+                    data:"roomCode=" + sessionStorage.roomCode
+                    + "\u0026username=" + sessionStorage.username,
+                    success:function(data){
+                        console.log(data);
+                //var objData  = jQuery.parseJSON(data);
+                //console.log("Hello There General Kenobi");
+                        if (data["roomExists"] == "false"){
+                            alert("Room Does Not Exist");
+                        } else{
+                            if (data["usernameExists"] == "true"){
+                                alert("Username already exists. Try another");
+                            } else{
+                                window.location.href = "QueueStudentView.html";
+                            }
+                        }
+                    }
 
-});
+                });
 
-}
+            }
+            function isAlphaNumeric(str) {
+                var code, i, len;
+                for (i = 0, len = str.length; i < len; i++) {
+                    code = str.charCodeAt(i);
+                    if (!(code > 47 && code < 58) &&
+                        !(code > 64 && code < 91) &&
+                        !(code > 96 && code <123)) {
+                       return false;
+                    }
+                }
+                return true;
+            }
             </script>
 
 
             <p>
-            <a href="QueueTARoomSetUpPage.php"><button class="w3-button
+            <a href="./QueueTARoomSetUpPage.php"><button class="w3-button
                     w3-round">Create New Room</button></a>
             </p>
             <p>

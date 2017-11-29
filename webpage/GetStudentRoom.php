@@ -123,6 +123,7 @@ for(var i = 0; i< userNames.length; i++){
       newDivChild2.setAttribute('class', 'w3-display-left w3-red w3-center');
     }
     newDivChild2.setAttribute('style', 'width: 50%; height: 100px;');
+    newDivChild2.setAttribute('id', 'resolved_'+userNames[i]);
     //newDivChild
 
     //par for username
@@ -177,6 +178,8 @@ for(var i = 0; i< userNames.length; i++){
     var insertText = document.createElement('textarea');
     insertText.setAttribute("id", userNames[i]);
     insertText.setAttribute("onclick", 'populateText(' + '\"' + userNames[i] + '\"' + ')');
+    insertText.setAttribute("placeholder", "Character limit of 3999 characters");
+    insertText.setAttribute("maxlength", "3999");
 
     console.log(divDict[userNames[i]]);
     if (divDict[userNames[i]] == "true"){

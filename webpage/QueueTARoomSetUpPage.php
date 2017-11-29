@@ -3,7 +3,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Queue</title>
+    <link rel="icon"
+          type="image/png"
+          href="favicon-96x96.png">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
@@ -49,7 +52,7 @@
     $conn = oci_connect( $username,
                          $password,
                          '//dbserver.engr.scu.edu/db11g');
-    if ($conn) { print "Connected";}
+    if ($conn) {}
     else { print "Connection failed <br />"; exit;}
 
     $letters = array("A","B","C","D","E","F",
@@ -57,8 +60,8 @@
                      "O","P","Q","R","S","T","U","V",
                      "W","X","Y","Z");
     $badwords = array("FUCK","FUKC","CUNT",
-                      "DICK","SHIT","DAMN","CRAP","KRAP","BDSM");
-    session_start();
+                      "DICK","SHIT","DAMN","CRAP","KRAP","BDSM","KUNT");
+    //session_start();
 
     do {
     $rand_keys = array_rand($letters, 4);
@@ -66,9 +69,8 @@
            . $letters[$rand_keys[2]] 
            . $letters[$rand_keys[3]];
     }while(in_array($str,$badwords));
-    echo $str;
 
-    $_SESSION['room_code'] = $str;
+    //$_SESSION['room_code'] = $str;
 
     //$sql = "INSERT INTO ROOMS VALUES ('$str', 0)";
     //$sql_statement = OCIParse($conn, $sql);

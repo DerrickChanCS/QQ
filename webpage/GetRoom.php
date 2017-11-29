@@ -144,6 +144,7 @@ for(var i = 0; i< userNames.length; i++){
 
     var datePar = document.createElement("p");
     var dateNode = document.createTextNode(dates[i]);
+    datePar.setAttribute("id", "date_"+userNames[i]);
     datePar.appendChild(dateNode);
 
     //Append both to child 3
@@ -169,6 +170,8 @@ for(var i = 0; i< userNames.length; i++){
     //Text area
     var insertText = document.createElement('textarea');
     insertText.setAttribute("id", userNames[i]);
+    insertText.setAttribute("maxlength", "3999");
+    insertText.setAttribute("placeholder", "Character limit of 3999 characters"); 
     insertText.setAttribute("onclick", 'populateText(' + '\"'  + userNames[i] + '\"' + ')');
     console.log(divDict[userNames[i]]);
     if (divDict[userNames[i]] == "true"){
