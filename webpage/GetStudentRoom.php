@@ -10,14 +10,9 @@ $conn = oci_connect($username,
     '//dbserver.engr.scu.edu/db11g');
 if ($conn) {}
 $roomCode = $_POST['roomCode'];
-
-
-
-
 $textOpenClose = $_POST['textOpenClose'];
 
-
-
+//Get all the questions from the passed in room
 $sql = "Select * from Questions where room = :roomCode ORDER BY time_stamp";
 $compiled = oci_parse($conn, $sql);
 oci_bind_by_name($compiled, ":roomCode", $roomCode);
@@ -32,8 +27,8 @@ $dateArray = array();
 $resolvedArray = array();
 
 $currentDivNum = $_POST['currentDivNum'];
-//echo "currentDivNum from getRoom.php: $currentDivNum";
 
+//Loop through the fetched results
 while (OCIFetch($compiled)){
     for ($i = 1; $i <= $num_columns; $i++) {
         $column_value = OCIResult($compiled, $i);
@@ -93,11 +88,7 @@ for(var j = 0; j < divVal.length; j++){
 
 for(var i = 0; i< userNames.length; i++){
     currentDivNum++;
-    
 
-
-
-    //console.log("Current div num from getRoom.php: " + currentDivNum);
     var container = document.getElementById("container");
 
     var newDiv = document.createElement('div'); //id sessionName
@@ -105,9 +96,6 @@ for(var i = 0; i< userNames.length; i++){
     newDiv.setAttribute('class', 'w3-row');
     newDiv.setAttribute('style',"margin-left: 15%; margin-top: 30px");
     
-    //console.log("hi" + userNames[i]);
-
-
     //Child 1
     newDivChild1 = document.createElement("div");
     newDivChild1.setAttribute('class', "w3-panel w3-grey w3-display-container w3-dropdown-click");
@@ -117,6 +105,7 @@ for(var i = 0; i< userNames.length; i++){
     //Child 2 onclick expand
     var newDivChild2 = document.createElement("div");
     newDivChild2.setAttribute('onclick', 'expandQuestion(' + '\"' +  userNames[i]+ '\"' + ')');
+    //div is drawn red if the question has been resolved by the TA
     if(resolved[i] == 'n'){
       newDivChild2.setAttribute('class', 'w3-display-left w3-dark-grey w3-center');
     } else{
@@ -124,7 +113,6 @@ for(var i = 0; i< userNames.length; i++){
     }
     newDivChild2.setAttribute('style', 'width: 50%; height: 100px;');
     newDivChild2.setAttribute('id', 'resolved_'+userNames[i]);
-    //newDivChild
 
     //par for username
     var userNamePar = document.createElement("p");
@@ -139,23 +127,17 @@ for(var i = 0; i< userNames.length; i++){
     newDivChild3.setAttribute("class", "w3-display-right w3-grey w3-center");
     newDivChild3.setAttribute("style", "width: 50%");
 
-    //create paragraphs for tag and date
-
-    /*
-    var tagPar = document.createElement("p");
-    var parNode = document.createTextNode(tags[i]);
-    tagPar.appendChild(parNode);
-    */
-
+    //create paragraphs for date
     var datePar = document.createElement("p");
     var dateNode = document.createTextNode(dates[i]);
     datePar.appendChild(dateNode);
 
-    //Append both to child 3
-    //newDivChild3.appendChild(tagPar);
+    //Append to child 3
     newDivChild3.appendChild(datePar);
 
     //onclick close question
+    //if the current user matches i, draw the closeQuestion span
+    //else dont
     if(sessionStorage.username == userNames[i]){
         var closeSpan = document.createElement('span');
         closeSpan.setAttribute("onclick",'closeQuestion(' + '\"' +  userNames[i]+ '\"' + '), ' +  
@@ -166,7 +148,6 @@ for(var i = 0; i< userNames.length; i++){
         
         closeSpan.innerHTML = "&times;";
     }
-
 
     //Append all to child 1
     newDivChild1.appendChild(newDivChild2);
@@ -181,13 +162,12 @@ for(var i = 0; i< userNames.length; i++){
     insertText.setAttribute("placeholder", "Character limit of 3999 characters");
     insertText.setAttribute("maxlength", "3999");
 
-    console.log(divDict[userNames[i]]);
+    //Sets if the textarea should be shown or not
     if (divDict[userNames[i]] == "true"){
-    insertText.setAttribute("class", "w3-border w3-col w3-show w3-hide w3-container w3-half");
+        insertText.setAttribute("class", "w3-border w3-col w3-show w3-hide w3-container w3-half");
     }
     else{
-
-    insertText.setAttribute("class", "w3-border w3-half w3-hide w3-container");
+        insertText.setAttribute("class", "w3-border w3-half w3-hide w3-container");
     }
     insertText.setAttribute("rows", "4");
     //change this back to readonly if they are not the owner of the question
@@ -204,10 +184,9 @@ for(var i = 0; i< userNames.length; i++){
 
 
     //Update Button
-    console.log("test");
-    //updateButton.setAttribute("class", "w3-button w3-hide w3-border");
-    //if (divDict[userNames[i]] == "true"){
     textButtonRow.appendChild(insertText);
+    //if the current user matches i, draw the update button
+    //else dont
     if(sessionStorage.username == userNames[i]) {
         console.log("in the update button thing");
         var updateButton = document.createElement('button');

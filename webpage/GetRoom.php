@@ -1,22 +1,21 @@
+
 <head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 </head>
 
 <?php
+//This script echoes out the HTML of the questions retrieved from the database
 include 'password.php';
 $conn = oci_connect($username,
     $password,
     '//dbserver.engr.scu.edu/db11g');
 if ($conn) {}
+//Get the values from JS
 $roomCode = $_POST['roomCode'];
-
-
-
-
 $textOpenClose = $_POST['textOpenClose'];
-
-
+//Passed in the format of username,[true|false]?username,[true|false]
+//received as URI
 
 $sql = "Select * from Questions where room = :roomCode ORDER BY time_stamp";
 $compiled = oci_parse($conn, $sql);
@@ -25,14 +24,16 @@ oci_execute($compiled);
 $num_columns = OCINumCols($compiled);
 
 
-$userNames = array();
-$tagArray = array();
-$textArray = array();
-$dateArray = array();
+$userNames     = array();
+$tagArray      = array();
+$textArray     = array();
+$dateArray     = array();
 $resolvedArray = array();
 
 $currentDivNum = $_POST['currentDivNum'];
 
+//Get all of values from the database and populate into php arrays
+//loop through returned results
 while (OCIFetch($compiled)){
     for ($i = 1; $i <= $num_columns; $i++) {
         $column_value = OCIResult($compiled, $i);
@@ -54,6 +55,7 @@ while (OCIFetch($compiled)){
 
     }
 }
+
 $json_usernames = json_encode($userNames);
 $json_text      = json_encode($textArray);
 $json_date      = json_encode($dateArray);
@@ -81,18 +83,17 @@ var divVal = divMap.split("?");
 var temp ="";
 var divDict = {};
 
+//Builds JS map of show/hide values
 for(var j = 0; j < divVal.length; j++){
     temp = divVal[j].split(",");
     divDict[temp[0]] = temp[1];
 }
 
 
+//i represents the index of each unique individual user
 for(var i = 0; i< userNames.length; i++){
     currentDivNum++;
     
-
-
-
     //console.log("Current div num from getRoom.php: " + currentDivNum);
     var container = document.getElementById("container");
 
@@ -100,9 +101,6 @@ for(var i = 0; i< userNames.length; i++){
     newDiv.setAttribute('id', "M" + userNames[i]);
     newDiv.setAttribute('class', 'w3-row');
     newDiv.setAttribute('style',"margin-left: 15%; margin-top: 30px");
-    
-    //console.log("hi" + userNames[i]);
-
 
     //Child 1
     newDivChild1 = document.createElement("div");
@@ -111,8 +109,10 @@ for(var i = 0; i< userNames.length; i++){
 
 
     //Child 2 onclick expand
+    //Adds div that expands textarea onclick
     var newDivChild2 = document.createElement("div");
     newDivChild2.setAttribute('onclick', 'expandQuestion(' + '\"' +  userNames[i]+ '\"' + ')');
+    //If the TA answered the question
     if(resolved[i] == 'n'){
       newDivChild2.setAttribute('class', 'w3-display-left w3-dark-grey w3-center');
     } else{
@@ -134,21 +134,13 @@ for(var i = 0; i< userNames.length; i++){
     newDivChild3.setAttribute("class", "w3-display-right w3-grey w3-center");
     newDivChild3.setAttribute("style", "width: 50%");
 
-    //create paragraphs for tag and date
-
-    /*
-    var tagPar = document.createElement("p");
-    var parNode = document.createTextNode(tags[i]);
-    tagPar.appendChild(parNode);
-    */
-
+    //create p for date
     var datePar = document.createElement("p");
     var dateNode = document.createTextNode(dates[i]);
     datePar.setAttribute("id", "date_"+userNames[i]);
     datePar.appendChild(dateNode);
 
-    //Append both to child 3
-    //newDivChild3.appendChild(tagPar);
+    //Append date to child 3
     newDivChild3.appendChild(datePar);
 
     //onclick close question
@@ -173,13 +165,12 @@ for(var i = 0; i< userNames.length; i++){
     insertText.setAttribute("maxlength", "3999");
     insertText.setAttribute("placeholder", "Character limit of 3999 characters"); 
     insertText.setAttribute("onclick", 'populateText(' + '\"'  + userNames[i] + '\"' + ')');
-    console.log(divDict[userNames[i]]);
+    //Determines if the textarea should be drawn shown or hidden
     if (divDict[userNames[i]] == "true"){
-    insertText.setAttribute("class", "w3-border w3-show w3-hide w3-container");
+        insertText.setAttribute("class", "w3-border w3-show w3-hide w3-container");
     }
     else{
-
-    insertText.setAttribute("class", "w3-border w3-hide w3-container");
+        insertText.setAttribute("class", "w3-border w3-hide w3-container");
     }
     insertText.setAttribute("rows", "4");
     insertText.setAttribute("readonly", "");
@@ -187,8 +178,6 @@ for(var i = 0; i< userNames.length; i++){
 
     var boxText = document.createTextNode(questionText[i]);
     insertText.appendChild(boxText);
-
-
 
     //Append Child 1 to newDiv
     newDiv.appendChild(newDivChild1);
@@ -199,7 +188,3 @@ for(var i = 0; i< userNames.length; i++){
 
 }
 </script>
-
-
-
-

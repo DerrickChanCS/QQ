@@ -13,14 +13,6 @@
 
     $tag = $_POST["tag"];
 
-    /*
-    echo "hi";
-    echo "<br>";
-    echo $room_code;
-    echo "<br>";
-    echo $_POST["tag"];
-    echo "<br>";
-    */
 
     $sql = "INSERT INTO tags VALUES ('${room_code}', '${tag}')";
     $sql_statement = OCIParse($conn, $sql);

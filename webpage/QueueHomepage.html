@@ -35,13 +35,14 @@
             </div>
 
             <script>
+            //Function to enter a specified room
             function enterRoom(){
+                //matches case
                 var roomCode = $("#Text1").val().toUpperCase();
                 
                 sessionStorage.roomCode = roomCode;
-                //put new textbox for user name
-                //textbox id should be UsernameText
                 sessionStorage.username = $("#UsernameText").val();
+                //Validates input
                 if(sessionStorage.username.length == 0){
                     alert("Please enter a username.");
                     return;
@@ -50,8 +51,7 @@
                     alert("Your username can only contain Alphanumeric characters!");
                     return;
                 }
-                //sessionStorage.username = "testuser";
-                console.log(roomCode);
+                //Checks with backend for a valid roomcode and a nonexistent username
                 $.ajax({
                     type:"POST",
                     url:"./Validate.php",
@@ -59,14 +59,13 @@
                     + "\u0026username=" + sessionStorage.username,
                     success:function(data){
                         console.log(data);
-                //var objData  = jQuery.parseJSON(data);
-                //console.log("Hello There General Kenobi");
                         if (data["roomExists"] == "false"){
                             alert("Room Does Not Exist");
                         } else{
                             if (data["usernameExists"] == "true"){
                                 alert("Username already exists. Try another");
                             } else{
+                                //If succeed, go to student view
                                 window.location.href = "QueueStudentView.html";
                             }
                         }

@@ -38,20 +38,23 @@
 
     <script>
         document.getElementById("RoomNum").innerHTML = "Room " +
-        sessionStorage.roomCode;
+            sessionStorage.roomCode;
         document.getElementById("UserID").innerHTML = "User Name : " +
-        sessionStorage.username;
+            sessionStorage.username;
         var currentDivNum = 0;
         var updateInterval = setInterval(showQuestions, 6000);
         function showQuestions(){
             clearInterval(updateInterval);
             updateInterval = setInterval(showQuestions, 6000);
+            //When question is shown, pause the interval and reset it
+            //If textarea is focused, don't update
             if( $("#"+sessionStorage.username).is(":focus")){
                 return;
             }
             var textAreaArray = $("#container").find("textarea");
             var textString = "";
             var tf = "";
+            //get list of open text areas
             for ( var x = 0; x < textAreaArray.length; x++)
             {
                 tf = $("#" + textAreaArray[x].id).hasClass("w3-show");
@@ -73,37 +76,39 @@
                         }
                     });
         }
+        
         $(document).ready(function() {
             showQuestions();
         });
+        //called on the submit button onclick
         function submitQuestion(){
             $.ajax({
                     type:"POST",
                     url:"./CheckUserQuestion.php", 
                     data: "roomCode=" + sessionStorage.roomCode +
                     "\u0026username=" + sessionStorage.username,
-                        success:function(data){
-                            if(data["questionExists"] == "true"){
-                                alert("You already submitted a question! Delete your previous question or wait until your current question is answered.");
-                            }else{
-                                $.ajax({
-                                        type:"POST",
-                                        url:"./SubmitQuestion.php", 
-                                        data: "roomCode=" + sessionStorage.roomCode +
-                                        "\u0026questionText=" + encodeURIComponent($("#Text1").val()+" ") +
-                                        "\u0026userName=" + sessionStorage.username,
-                                            success:function(data){
-                                                console.log(sessionStorage.roomCode);
-                                                console.log($("#Text1").val()); 
-                                                console.log(data.status);
-                                                showQuestions(); 
-                                            }
-                                        });
-                            }
+                    success:function(data){
+                        if(data["questionExists"] == "true"){
+                            alert("You already submitted a question! Delete your previous question or wait until your current question is answered.");
+                        }else{
+                            $.ajax({
+                                type:    "POST",
+                                url:     "./SubmitQuestion.php", 
+                                data:    "roomCode=" + sessionStorage.roomCode +
+                                         "\u0026questionText=" + encodeURIComponent($("#Text1").val()+" ") +
+                                         "\u0026userName=" + sessionStorage.username,
+                                success: function(data){
+                                             console.log(sessionStorage.roomCode);
+                                             console.log($("#Text1").val()); 
+                                             console.log(data.status);
+                                             showQuestions(); 
+                                         }
+                             });
                         }
-                    });
-           console.log("done with submit question, showing questins");
+                    }
+            });
         }
+
         function updateQuestion(id){
             $.ajax({
                 type: "POST",
@@ -119,52 +124,31 @@
         }
         var currentDiv = document.getElementById("test1"); //keeps track of the current div
         var qNum = 0; //global var to give new questions a div with a unique id
-        function testQuestionCreate() {
-            var questionTextContent = document.getElementById("Text1").value;
-            
-            qNum++; //incriments the question div number
-            var newDiv = document.createElement("div");
-            document.body.insertBefore(newDiv, currentDiv); //create and insert a new div with a unique id above the previous question div
-            newDiv.id = qNum;
-            currentDiv = newDiv;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById(newDiv.id).innerHTML =
-                        this.responseText;
-                }
-            };
-            xhttp.open("GET", "test.php?q=" + qNum + "&t=" + questionTextContent, true); //passes the qnum to get added to the php file. Allows each question panel to have elements with unique ids so they can call the expand/close question functions without conflicting with eachother
-            xhttp.send();
-        }
+
     </script>
     <div id="questions">
         <div id="test1"></div>
     </div>
 
     <script>
-        sessionStorage.alertFlag = false;
         function expandQuestion(id) {
-            var x = document.getElementById(id);
-            if (x.className.indexOf("w3-show") == -1) {
-                x.className += " w3-show";
+            //shows the textarea/update button
+            var textAreaID = document.getElementById(id);
+            if (textAreaID.className.indexOf("w3-show") == -1) {
+                textAreaID.className += " w3-show";
             } else {
-                x.className = x.className.replace(" w3-show", "");
+                textAreaID.className = textAreaID.className.replace(" w3-show", "");
             }
-            console.log("B" + id);
-            var y = document.getElementById("B"+id);
-            if (y.className.indexOf("w3-show") == -1) {
-                y.className += " w3-show";
+
+            var buttonId = document.getElementById("B"+id);
+            if (buttonId.className.indexOf("w3-show") == -1) {
+                buttonId.className += " w3-show";
             } else {
-                y.className = y.className.replace(" w3-show", "");
+                buttonId.className = buttonId.className.replace(" w3-show", "");
             }
         }
-        function populateText(id){
-            
-        }
-    </script>
-    <script>
         function closeQuestion(id) {
+            //validation to make sure you close questions
             if(sessionStorage.username != id){
                return;
             }
@@ -186,12 +170,9 @@
                     success:function(data){
                             console.log("done with removeQuestion.php");
                         }
-                    });
+            });
             
         }
-    </script>
-
-    <script>
         function openAllQuestions(){
             var nodes = document.getElementsByTagName("textarea");
             for(var i=0; i<nodes.length; i++){
@@ -220,8 +201,8 @@
        
        function saveSession(){
            //openAllQuestions();
-           console.log("Woop");
            //var stuff = document.documentElement.innerHTML;
+           //saves session
            var stuff = document.getElementById("container").innerHTML;
            download(stuff, "SavedSession" + sessionStorage.roomCode + ".html", 'plain/html');
        }

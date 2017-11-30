@@ -1,4 +1,5 @@
 <?php
+    //The purpose of this file is to check if a user has any existing questions
     header('Content-Type: application/json');
     //initialize response array
     //Desired outcome: roomExists is true and usernameExists is false

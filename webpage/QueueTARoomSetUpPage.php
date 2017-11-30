@@ -59,6 +59,7 @@
                      "G","H","I","J","K","L","M","N",
                      "O","P","Q","R","S","T","U","V",
                      "W","X","Y","Z");
+    //blacklist for certain words
     $badwords = array("FUCK","FUKC","CUNT",
                       "DICK","SHIT","DAMN","CRAP","KRAP","BDSM","KUNT");
     //session_start();
@@ -90,24 +91,25 @@
         </div>
     </div>
     <script> 
-    function nextpage(){
-          $RoomCode = "<?php echo $str; ?>";
-          //window.alert($RoomCode);
-          $.ajax({
-              url:'ConfirmRoom.php',
-              data: { RoomCode : $RoomCode},
-              type: "POST",
-              success: function(a){
-                  //alert('Hello from PHP: ' + a);
-                  sessionStorage.roomCode = "<?php echo $str; ?>"; 
-                  console.log("TA ROOM STUFF" + sessionStorage.roomCode);
-                  window.location.href = "QueueTAView.html";
-              },
-              error: function(data){
-                  console.log(data);
-              }
-         });
-}
-</script>
+        //When this function is called, posts data to database
+        function nextpage(){
+            $RoomCode = "<?php echo $str; ?>";
+            //window.alert($RoomCode);
+            $.ajax({
+                url:     'ConfirmRoom.php',
+                data:    { RoomCode : $RoomCode},
+                type:    "POST",
+                success: function(a){
+                            //alert('Hello from PHP: ' + a);
+                            sessionStorage.roomCode = "<?php echo $str; ?>"; 
+                            console.log("TA ROOM STUFF" + sessionStorage.roomCode);
+                            window.location.href = "QueueTAView.html";
+                         },
+                error:   function(data){
+                            console.log(data);
+                         }
+            });
+        }
+    </script>
 </body>
 </html>

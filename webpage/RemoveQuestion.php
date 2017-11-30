@@ -1,15 +1,6 @@
 <?php
-    //fclose(STDIN);
-    //fclose(STDOUT);
-    //fclose(STDERR);
-    //$STDIN  = fopen('log.txt', 'w+');
-    $STDOUT = fopen('log.txt', 'w');
-    //$STDERR = fopen('log.txt', 'w+');
-    print "test";
-    echo "echo test from echo";
-
-
-    fwrite($STDOUT, "echo test");
+    //The purpose of this file is to delete a question
+    //can be called from TA view or student view
     include 'password.php';
     $conn = oci_connect( $username,
                         $password,
