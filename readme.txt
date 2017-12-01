@@ -77,6 +77,6 @@ Yes, the files are on the usb, you can copy the files or you can just use git cl
 
     @maketables.sql
 
-13) Now you should be able to access the project by going to:
+13) Now you should be able to access the project by opening Chrome or Firefox and navigating to:
     http://students.engr.scu.edu/[SCU Username]/QQ/webpage/QueueHomepage.html
     
